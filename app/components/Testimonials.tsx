@@ -130,7 +130,7 @@ const COLUMN_3: Testimonial[] = [
 
 export default function Testimonials() {
   return (
-    <section className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32">
+    <section id="testimonials" className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32 scroll-mt-20">
 
       <div className="relative z-10 w-full max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 

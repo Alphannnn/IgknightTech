@@ -43,7 +43,7 @@ const STEPS: Step[] = [
 
 export default function Process() {
   return (
-    <section className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32">
+    <section id="process" className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32 scroll-mt-20">
 
       {/* Subtle background grid texture */}
       <div

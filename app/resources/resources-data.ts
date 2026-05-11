@@ -8,6 +8,7 @@ export type Article = {
   authorAvatar: { from: string; to: string };
   date: string;
   readTime: string;
+  image: string;
   featured?: boolean;
 };
 
@@ -23,6 +24,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#7BB6FF", to: "#3B82F6" },
     date: "Mar 18, 2025",
     readTime: "12 min read",
+    image: "/blog/no-microservices.jpg",
     featured: true,
   },
   {
@@ -36,6 +38,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#67E8F9", to: "#0891B2" },
     date: "Mar 11, 2025",
     readTime: "18 min read",
+    image: "/blog/migrating-4m-users.jpg",
   },
   {
     id: "hipaa-2025",
@@ -48,6 +51,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#34D399", to: "#059669" },
     date: "Mar 4, 2025",
     readTime: "15 min read",
+    image: "/blog/hipaa-2025.jpg",
   },
   {
     id: "rsc-in-prod",
@@ -60,6 +64,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#A78BFA", to: "#7C3AED" },
     date: "Feb 25, 2025",
     readTime: "10 min read",
+    image: "/blog/rsc-in-prod.jpg",
   },
   {
     id: "trust-in-fintech",
@@ -72,6 +77,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#FCD34D", to: "#D97706" },
     date: "Feb 18, 2025",
     readTime: "9 min read",
+    image: "/blog/trust-in-fintech.jpg",
   },
   {
     id: "ml-30-days",
@@ -84,6 +90,7 @@ export const ARTICLES: Article[] = [
     authorAvatar: { from: "#A78BFA", to: "#7C3AED" },
     date: "Feb 4, 2025",
     readTime: "14 min read",
+    image: "/blog/ml-30-days.jpg",
   },
 ];
 

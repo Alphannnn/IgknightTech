@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FormEvent, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -73,159 +74,137 @@ function Hero() {
   );
 }
 
-/* ───────────────────────── Blog (light, magazine layout) ───────────────────────── */
+/* ───────────────────────── Blog (light, image-led) ───────────────────────── */
 
 function BlogSection() {
   const featured = ARTICLES.find((a) => a.featured) ?? ARTICLES[0];
-  const rest = ARTICLES.filter((a) => a.id !== featured.id).slice(0, 5);
+  const rest = ARTICLES.filter((a) => a.id !== featured.id).slice(0, 3);
 
   return (
     <section id="blog" className="relative w-full bg-white py-16 sm:py-20 md:py-24">
       <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 
-        <div className="flex items-end justify-between gap-4 mb-8 sm:mb-10">
+        <div className="flex items-end justify-between gap-4 mb-10 sm:mb-12">
           <div>
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
-              <span className="h-px w-6 bg-slate-300" />
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
               Engineering Blog
             </div>
-            <h2 className="mt-3 text-slate-900 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            <h2 className="mt-2 text-slate-900 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
               Latest writing
             </h2>
           </div>
           <Link
             href="#"
-            className="group inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 text-sm font-semibold transition-colors flex-shrink-0"
+            className="group inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors flex-shrink-0"
           >
             All posts
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-5 lg:gap-6">
+        <FeaturedCard article={featured} />
 
-          {/* Featured article */}
-          <FeaturedArticle article={featured} />
-
-          {/* Compact list of articles */}
-          <div className="flex flex-col gap-0 divide-y divide-slate-100">
-            {rest.map((a) => (
-              <CompactArticle key={a.id} article={a} />
-            ))}
-          </div>
+        <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {rest.map((a) => (
+            <ArticleCard key={a.id} article={a} />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function FeaturedArticle({ article }: { article: Article }) {
+function FeaturedCard({ article }: { article: Article }) {
   return (
     <Link
       href="#"
-      className="group relative rounded-3xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-[0_8px_28px_rgba(15,23,42,0.08)] transition-all duration-500 overflow-hidden flex flex-col"
+      className="group grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center"
     >
-      {/* Visual top with category-colored gradient */}
-      <div
-        className="relative h-44 sm:h-56 overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${article.categoryColor}30, ${article.categoryColor}08)`,
-        }}
-      >
-        {/* Decorative grid pattern */}
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            maskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 100%)",
-          }}
+      {/* Image */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+        <Image
+          src={article.image}
+          alt={article.title}
+          fill
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
         />
-        {/* Big article number stamp */}
-        <div
-          className="absolute -bottom-6 -right-2 text-[12rem] font-black leading-none opacity-15 select-none tracking-tighter"
-          style={{ color: article.categoryColor }}
-        >
-          01
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      </div>
 
-        {/* Featured badge */}
-        <div className="absolute top-5 left-5 flex items-center gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full bg-white/95 text-slate-900 backdrop-blur shadow-sm">
-            Featured
-          </span>
+      {/* Body */}
+      <div className="flex flex-col">
+        <div className="flex items-center gap-3">
           <span
-            className="text-[10px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full backdrop-blur"
+            className="inline-flex items-center text-[11px] font-medium uppercase tracking-[0.14em] px-2.5 py-1 rounded-full"
             style={{
-              background: `${article.categoryColor}30`,
               color: article.categoryColor,
+              background: `${article.categoryColor}14`,
             }}
           >
             {article.category}
           </span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Featured
+          </span>
         </div>
-      </div>
 
-      {/* Body */}
-      <div className="flex-1 flex flex-col p-6 sm:p-7">
-        <h3 className="text-slate-900 text-xl sm:text-2xl md:text-[1.75rem] font-extrabold tracking-tight leading-[1.15] group-hover:text-slate-700 transition-colors">
-          {article.title}
+        <h3 className="mt-5 text-slate-900 text-3xl sm:text-4xl md:text-[2.75rem] font-bold tracking-tight leading-[1.08]">
+          <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-[length:0%_2px] bg-[position:0_100%] group-hover:bg-[length:100%_2px] transition-[background-size] duration-500 ease-out">
+            {article.title}
+          </span>
         </h3>
-        <p className="mt-3 text-slate-500 text-sm sm:text-[15px] leading-relaxed">
+
+        <p className="mt-4 text-slate-500 text-base sm:text-[17px] leading-relaxed max-w-xl">
           {article.excerpt}
         </p>
 
-        <div className="mt-auto pt-5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-full text-white text-[11px] font-bold flex items-center justify-center ring-2 ring-white shadow-sm"
-              style={{ background: `linear-gradient(135deg, ${article.authorAvatar.from}, ${article.authorAvatar.to})` }}
-            >
-              {article.author.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-            </div>
-            <div className="text-xs">
-              <div className="text-slate-900 font-bold">{article.author}</div>
-              <div className="text-slate-500">{article.date} · {article.readTime}</div>
-            </div>
-          </div>
-          <ArrowUpRight className="w-5 h-5 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+        <div className="mt-6 flex items-center gap-3 text-sm">
+          <span className="text-slate-900 font-medium">{article.author}</span>
+          <span className="w-1 h-1 rounded-full bg-slate-300" />
+          <span className="text-slate-500">{article.date}</span>
+          <span className="w-1 h-1 rounded-full bg-slate-300" />
+          <span className="text-slate-500">{article.readTime}</span>
         </div>
       </div>
     </Link>
   );
 }
 
-function CompactArticle({ article }: { article: Article }) {
+function ArticleCard({ article }: { article: Article }) {
   return (
-    <Link
-      href="#"
-      className="group flex items-start gap-4 py-5 first:pt-0 last:pb-0 hover:pl-2 transition-all duration-300"
-    >
-      <span
-        className="mt-1.5 flex-shrink-0 text-[10px] font-bold uppercase tracking-[0.16em] px-2 py-0.5 rounded"
-        style={{
-          background: `${article.categoryColor}1A`,
-          color: article.categoryColor,
-        }}
-      >
-        {article.category}
-      </span>
-
-      <div className="flex-1 min-w-0">
-        <h3 className="text-slate-900 text-[15px] sm:text-base font-bold tracking-tight leading-snug group-hover:text-slate-700 transition-colors">
-          {article.title}
-        </h3>
-        <div className="mt-1.5 flex items-center gap-2 text-slate-500 text-xs">
-          <span>{article.author}</span>
-          <span className="w-0.5 h-0.5 rounded-full bg-slate-300" />
-          <span>{article.date}</span>
-          <span className="w-0.5 h-0.5 rounded-full bg-slate-300" />
-          <span>{article.readTime}</span>
-        </div>
+    <Link href="#" className="group flex flex-col">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-100">
+        <Image
+          src={article.image}
+          alt={article.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+        />
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(180deg, transparent 55%, ${article.categoryColor}22 100%)`,
+          }}
+        />
       </div>
 
-      <ArrowUpRight className="w-4 h-4 mt-1 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0" />
+      <div className="mt-5 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.14em]">
+        <span style={{ color: article.categoryColor }}>{article.category}</span>
+        <span className="w-1 h-1 rounded-full bg-slate-300" />
+        <span className="text-slate-400">{article.readTime}</span>
+      </div>
+
+      <h3 className="mt-3 text-slate-900 text-lg sm:text-xl font-semibold tracking-tight leading-snug">
+        <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-[length:0%_1.5px] bg-[position:0_100%] group-hover:bg-[length:100%_1.5px] transition-[background-size] duration-500 ease-out">
+          {article.title}
+        </span>
+      </h3>
+
+      <div className="mt-3 text-slate-500 text-sm">
+        {article.author} · {article.date}
+      </div>
     </Link>
   );
 }

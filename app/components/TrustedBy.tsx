@@ -39,7 +39,7 @@ export default function TrustedBy() {
   };
 
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-24 sm:py-28 md:py-32">
+    <section id="trusted-by" className="relative w-full bg-[#0C1C3D] overflow-hidden py-24 sm:py-28 md:py-32 scroll-mt-20">
 
       {/* Dot grid */}
       <div
