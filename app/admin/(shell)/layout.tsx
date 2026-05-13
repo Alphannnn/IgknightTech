@@ -2,6 +2,8 @@ import AdminShell from "../AdminShell";
 import AdminToast from "../AdminToast";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function ShellLayout({
   children,
 }: {

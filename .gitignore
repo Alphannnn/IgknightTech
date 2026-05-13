@@ -42,10 +42,11 @@ next-env.d.ts
 
 /app/generated/prisma
 
-# Prisma / SQLite local DB
+# Local SQLite DB (legacy local dev)
 /dev.db
 /prisma/dev.db
 /prisma/dev.db-journal
-/prisma/migrations/migration_lock.toml
+
+# env files
 .env.local
 .env

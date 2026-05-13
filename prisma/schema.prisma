@@ -1,5 +1,5 @@
-// Igknight Tech — local admin backend
-// SQLite + Prisma. Connection string is set in .env (DATABASE_URL).
+// Igknight Tech — admin backend
+// PostgreSQL + Prisma. Connection string is set in DATABASE_URL.
 
 generator client {
   provider = "prisma-client"
@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 /// A scheduled meeting from /schedule. Created by the public form,
