@@ -40,45 +40,45 @@ const InstagramIcon: BrandIcon = (props) => (
   </svg>
 );
 
-type LinkItem = { label: string; href: string; badge?: string };
+type LinkItem = { label: string; href: string; badge?: string; external?: boolean };
 
 const SERVICES: LinkItem[] = [
-  { label: "Custom Software", href: "#" },
-  { label: "Web Development", href: "#" },
-  { label: "Mobile Apps", href: "#" },
-  { label: "AI & Data", href: "#" },
-  { label: "Cloud & DevOps", href: "#" },
-  { label: "Product Design", href: "#" },
+  { label: "Custom Software", href: "/services/custom-software" },
+  { label: "Web Development", href: "/services/web-development" },
+  { label: "Mobile Apps",     href: "/services/mobile-apps" },
+  { label: "AI & Data",       href: "/services/ai-data" },
+  { label: "Cloud & DevOps",  href: "/services/cloud-devops" },
+  { label: "Product Design",  href: "/services/product-design" },
 ];
 
 const COMPANY: LinkItem[] = [
-  { label: "About", href: "#" },
-  { label: "Careers", href: "/careers", badge: "Hiring" },
-  { label: "Press kit", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "About",              href: "/#about" },
+  { label: "Our process",        href: "/#process" },
+  { label: "Careers",            href: "/careers", badge: "Hiring" },
+  { label: "Contact",            href: "/schedule" },
   { label: "Schedule a meeting", href: "/schedule" },
 ];
 
 const RESOURCES: LinkItem[] = [
-  { label: "Blog", href: "#" },
-  { label: "Case studies", href: "#" },
-  { label: "Documentation", href: "#" },
-  { label: "Engineering wiki", href: "#" },
-  { label: "Changelog", href: "#" },
+  { label: "All articles",       href: "/resources" },
+  { label: "Case studies",       href: "/work" },
+  { label: "Latest postmortem",  href: "/resources/blog/migrating-4m-users" },
+  { label: "Architecture notes", href: "/resources/blog/no-microservices" },
+  { label: "ML in production",   href: "/resources/blog/ml-30-days" },
 ];
 
 const LEGAL: LinkItem[] = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Cookie Policy", href: "#" },
-  { label: "Security", href: "#" },
+  { label: "Privacy policy",   href: "/legal/privacy" },
+  { label: "Terms of service", href: "/legal/terms" },
+  { label: "Cookie policy",    href: "/legal/cookies" },
+  { label: "Security",         href: "/legal/security" },
 ];
 
 const SOCIAL: { icon: BrandIcon; label: string; href: string }[] = [
-  { icon: TwitterIcon, label: "Twitter", href: "#" },
-  { icon: LinkedinIcon, label: "LinkedIn", href: "#" },
-  { icon: GithubIcon, label: "GitHub", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
+  { icon: TwitterIcon,   label: "Twitter / X",  href: "https://twitter.com/igknighttech" },
+  { icon: LinkedinIcon,  label: "LinkedIn",     href: "https://linkedin.com/company/igknight-tech" },
+  { icon: GithubIcon,    label: "GitHub",       href: "https://github.com/igknight-tech" },
+  { icon: InstagramIcon, label: "Instagram",    href: "https://instagram.com/igknighttech" },
 ];
 
 export default function Footer() {
@@ -239,6 +239,8 @@ export default function Footer() {
                     key={s.label}
                     href={s.href}
                     aria-label={s.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group w-9 h-9 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
                   >
                     <Icon
@@ -251,8 +253,8 @@ export default function Footer() {
             </div>
 
             {/* Status pill */}
-            <a
-              href="#"
+            <Link
+              href="/legal/security"
               className="mt-4 group inline-flex items-center gap-2 text-blue-100/55 hover:text-white text-xs sm:text-[13px] transition-colors"
             >
               <span className="relative flex w-2 h-2">
@@ -261,7 +263,7 @@ export default function Footer() {
               </span>
               All systems operational
               <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-            </a>
+            </Link>
           </div>
 
           {/* Link columns */}

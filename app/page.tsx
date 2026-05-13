@@ -4,7 +4,7 @@ import {
   ProjectManagementSection,
   WorkTogetherSection,
 } from "./components/Features";
-import Team from "./components/Team";
+// import Team from "./components/Team";
 import Services from "./components/Services";
 import Process from "./components/Process";
 import TrustedBy from "./components/TrustedBy";
@@ -19,7 +19,6 @@ export default function Home() {
        <HeroSection />
        <ProjectManagementSection />
        <WorkTogetherSection />
-       <Team />
        <Services />
        <Process />
        <TrustedBy />

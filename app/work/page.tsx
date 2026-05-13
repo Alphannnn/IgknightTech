@@ -12,15 +12,82 @@ import {
   Trophy,
   Clock,
   Globe,
+  MessagesSquare,
+  CalendarCheck,
+  ShieldCheck,
+  FileLock,
+  GitBranch,
+  GraduationCap,
+  Quote,
+  Users,
+  Sparkle,
   type LucideIcon,
 } from "lucide-react";
 
-type Stat = { value: string; label: string; icon: LucideIcon };
+type Stat = { value: string; label: string; sublabel: string; icon: LucideIcon };
 const IMPACT_STATS: Stat[] = [
-  { value: "50+",    label: "Products shipped",            icon: Trophy },
-  { value: "$2.4B+", label: "Client revenue impact",       icon: TrendingUp },
-  { value: "12",     label: "Countries served",            icon: Globe },
-  { value: "96%",    label: "Projects delivered on time",  icon: Clock },
+  {
+    value: "50+",
+    label: "Products shipped",
+    sublabel: "From scrappy MVPs to multi-region platforms.",
+    icon: Trophy,
+  },
+  {
+    value: "$2.4B+",
+    label: "Client revenue impact",
+    sublabel: "Tracked across engagements since 2018.",
+    icon: TrendingUp,
+  },
+  {
+    value: "12",
+    label: "Countries served",
+    sublabel: "Teams across NA, EU, LATAM, and APAC.",
+    icon: Globe,
+  },
+  {
+    value: "96%",
+    label: "Delivered on time",
+    sublabel: "When we commit to a date, we mean it.",
+    icon: Clock,
+  },
+];
+
+type TrustItem = {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+};
+const TRUST_ITEMS: TrustItem[] = [
+  {
+    icon: CalendarCheck,
+    title: "Weekly demos, not waterfall surprises",
+    body: "Every Friday you see what actually shipped that week — working software, not slide decks. You always know where the project stands.",
+  },
+  {
+    icon: MessagesSquare,
+    title: "A direct line to the engineers",
+    body: "A shared Slack channel from day one. No account managers in the middle — ask questions, get answers from the people writing the code.",
+  },
+  {
+    icon: GitBranch,
+    title: "You own everything we build",
+    body: "Source code, IP, infrastructure, documentation — yours from the first commit. Hosted in your accounts, not ours.",
+  },
+  {
+    icon: FileLock,
+    title: "NDA-ready, audit-friendly",
+    body: "Mutual NDAs signed before kickoff. SOC 2 controls in our delivery pipeline. References from past clients available on request.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Fixed scope. Fixed timeline.",
+    body: "We scope, price, and commit to a date — and we tell you early if something needs to flex. No open-ended billing, no scope creep by stealth.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Knowledge transfer built in",
+    body: "The final two weeks are about handing the keys over — to your team or a new partner. No lock-in, no hostage architecture.",
+  },
 ];
 
 /* ───────────────────────── Page ───────────────────────── */
@@ -31,7 +98,9 @@ export default function WorkPage() {
       <Navbar />
       <Hero />
       <FeaturedCase />
+      <HowWeEngage />
       <CaseGrid />
+      <Voices />
       <ImpactSection />
       <FinalCTA />
       <Footer />
@@ -158,22 +227,33 @@ function Hero() {
   );
 }
 
-/* ───────────────────────── Featured (white) ───────────────────────── */
+/* ───────────────────────── Featured (white, premium spotlight) ───────────────────────── */
 
 function FeaturedCase() {
   const featured = CASES.find((c) => c.featured) ?? CASES[0];
-  const Icon = featured.icon;
 
   return (
     <section className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28">
+
+      {/* Soft ambient halo */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-32 -right-32 w-[640px] h-[640px] rounded-full opacity-50 blur-3xl pointer-events-none"
+        style={{
+          background: `radial-gradient(circle, ${featured.color}22, transparent 70%)`,
+        }}
+      />
+
       <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 
-        <div className="max-w-3xl mb-10 sm:mb-12">
+        {/* Section header */}
+        <div className="max-w-3xl mb-12 sm:mb-14">
           <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-400 uppercase">
             <span className="h-px w-6 sm:w-8 bg-slate-300" />
             Featured case study
           </div>
           <h2 className="mt-4 font-extrabold tracking-tight text-slate-900 text-3xl sm:text-4xl md:text-[3rem] leading-[1.05]">
+            A closer look at{" "}
             <span className="relative inline-block">
               <span
                 aria-hidden="true"
@@ -181,25 +261,87 @@ function FeaturedCase() {
               />
               <span className="relative">{featured.client}</span>
             </span>
+            .
           </h2>
+          <p className="mt-4 text-slate-500 text-base sm:text-lg leading-relaxed max-w-2xl">
+            Here&apos;s what the work looks like in practice — the problem we
+            walked into, the choices we made, and what changed for the team
+            once it shipped.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-start">
 
-          {/* Left — text */}
+          {/* Left — cover image */}
+          <div className="relative group">
+            <div
+              className="absolute -inset-4 rounded-3xl opacity-25 blur-2xl transition-opacity duration-700 group-hover:opacity-40 pointer-events-none"
+              style={{ background: `radial-gradient(circle, ${featured.color}, transparent 70%)` }}
+            />
+            <CaseCover study={featured} aspect="4/3" rounded="rounded-3xl" />
+
+            {/* Project meta strip — sits under image */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
+                <span className="font-semibold text-slate-700">{featured.duration}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
+                <span className="font-semibold text-slate-700">{featured.teamSize}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Sparkle className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
+                <span className="font-semibold text-slate-700">Shipped {featured.year}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right — story */}
           <div>
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
               <span>{featured.industry}</span>
               <span className="w-1 h-1 rounded-full bg-slate-300" />
               <span>{featured.service}</span>
             </div>
-            <h3 className="mt-3 text-slate-900 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-[1.1]">
+            <h3 className="mt-3 text-slate-900 text-2xl sm:text-3xl md:text-[2.25rem] font-extrabold tracking-tight leading-[1.1]">
               {featured.headline}
             </h3>
-            <p className="mt-4 text-slate-500 text-base sm:text-lg leading-relaxed">
-              {featured.description}
+            <p className="mt-4 text-slate-500 text-base sm:text-[17px] leading-relaxed">
+              {featured.longDescription}
             </p>
 
+            {/* Before / After mini-table — concrete, non-technical proof */}
+            {featured.beforeAfter && (
+              <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50/70 overflow-hidden">
+                <div className="grid grid-cols-[1.2fr_1fr_1fr] text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 bg-white border-b border-slate-200">
+                  <div className="px-4 py-2.5">What changed</div>
+                  <div className="px-4 py-2.5">Before</div>
+                  <div className="px-4 py-2.5">After</div>
+                </div>
+                {featured.beforeAfter.map((row, i) => (
+                  <div
+                    key={i}
+                    className={`grid grid-cols-[1.2fr_1fr_1fr] text-sm ${
+                      i !== featured.beforeAfter!.length - 1 ? "border-b border-slate-200/70" : ""
+                    }`}
+                  >
+                    <div className="px-4 py-3 text-slate-700 font-medium">{row.metric}</div>
+                    <div className="px-4 py-3 text-slate-400 line-through decoration-slate-300">
+                      {row.before}
+                    </div>
+                    <div
+                      className="px-4 py-3 font-extrabold tracking-tight"
+                      style={{ color: featured.color }}
+                    >
+                      {row.after}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Tech badges */}
             <div className="mt-6 flex flex-wrap gap-2">
               {featured.tech.map((t) => (
                 <span
@@ -211,70 +353,141 @@ function FeaturedCase() {
               ))}
             </div>
 
-            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <div>
-                <div
-                  className="text-3xl sm:text-4xl font-extrabold tracking-tight"
-                  style={{ color: featured.color }}
+            {/* Client quote */}
+            <figure className="mt-8 relative rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+              <Quote
+                className="absolute top-4 right-4 w-6 h-6 text-slate-200"
+                strokeWidth={1.5}
+              />
+              <blockquote className="text-slate-700 text-[15px] sm:text-base leading-relaxed">
+                &ldquo;{featured.quote.text}&rdquo;
+              </blockquote>
+              <figcaption className="mt-4 flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                  style={{
+                    background: `linear-gradient(135deg, ${featured.quote.avatar.from}, ${featured.quote.avatar.to})`,
+                  }}
                 >
-                  {featured.stat.value}
+                  {featured.quote.author
+                    .split(" ")
+                    .map((s) => s[0])
+                    .slice(0, 2)
+                    .join("")}
+                </span>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">{featured.quote.author}</div>
+                  <div className="text-xs text-slate-500">{featured.quote.role}</div>
                 </div>
-                <div className="mt-0.5 text-slate-500 text-xs uppercase tracking-wide font-semibold">
-                  {featured.stat.label}
-                </div>
-              </div>
+              </figcaption>
+            </figure>
 
+            <div className="mt-7">
               <Link
                 href={`/work/${featured.id}`}
-                className="group inline-flex items-center gap-2 text-slate-900 hover:text-slate-700 font-semibold text-sm transition-colors"
+                className="group inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors"
               >
                 Read full case study
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          {/* Right — visual */}
-          <div className="relative group">
-            <div
-              className="absolute -inset-4 rounded-3xl opacity-30 blur-2xl transition-opacity duration-700 group-hover:opacity-50"
-              style={{ background: `radial-gradient(circle, ${featured.color}, transparent 70%)` }}
-            />
-            <Link
-              href={`/work/${featured.id}`}
-              className="relative block aspect-[4/3] rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white overflow-hidden hover:border-slate-300 transition-all duration-300"
-            >
-              <div className="absolute inset-0 grid grid-cols-6 gap-3 p-6">
-                {Array.from({ length: 24 }).map((_, i) => {
-                  const h = Math.sin(i * 0.7) * 40 + 60;
-                  return (
-                    <div
-                      key={i}
-                      className="rounded-md transition-transform duration-500 group-hover:translate-y-[-2px]"
-                      style={{
-                        height: `${h}%`,
-                        background:
-                          i % 7 === 0
-                            ? `linear-gradient(180deg, ${featured.color}AA, ${featured.color}33)`
-                            : "rgba(15,23,42,0.04)",
-                        alignSelf: "end",
-                        transitionDelay: `${i * 15}ms`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-              <div className="relative w-full h-full flex items-center justify-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-[0_8px_24px_rgba(15,23,42,0.12)] bg-white group-hover:scale-110 transition-transform duration-500">
-                  <Icon
-                    className="w-10 h-10"
-                    style={{ color: featured.color }}
-                    strokeWidth={1.6}
-                  />
-                </div>
-              </div>
-            </Link>
+/* ───────────────────────── How we engage (white, trust signals) ───────────────────────── */
+
+function HowWeEngage() {
+  return (
+    <section className="relative w-full bg-slate-50/60 overflow-hidden py-20 sm:py-24 md:py-28 border-y border-slate-200/70">
+
+      {/* Subtle grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.5]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(15,23,42,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.025) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+          maskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, #000 35%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, #000 35%, transparent 100%)",
+        }}
+      />
+
+      <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
+
+        <div className="max-w-3xl mb-12 sm:mb-14">
+          <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-400 uppercase">
+            <span className="h-px w-6 sm:w-8 bg-slate-300" />
+            How we engage
           </div>
+          <h2 className="mt-4 font-extrabold tracking-tight text-slate-900 text-3xl sm:text-4xl md:text-[3rem] leading-[1.05]">
+            What working with us{" "}
+            <span className="relative inline-block">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 right-0 bottom-1 sm:bottom-2 h-2.5 sm:h-3 bg-amber-300/85 rounded-[3px]"
+              />
+              <span className="relative">actually looks like</span>
+            </span>
+            .
+          </h2>
+          <p className="mt-4 text-slate-500 text-base sm:text-lg leading-relaxed max-w-2xl">
+            We&apos;ve worked with founders who&apos;ve never hired engineers before
+            and with CTOs who&apos;ve hired hundreds. Either way, here&apos;s what stays
+            the same.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {TRUST_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="group relative rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 hover:border-slate-300 hover:shadow-[0_4px_20px_rgba(15,23,42,0.05)] transition-all duration-300"
+              >
+                <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100/70 flex items-center justify-center group-hover:bg-blue-100/80 transition-colors">
+                  <Icon className="w-5 h-5 text-[#4f9ef8]" strokeWidth={1.8} />
+                </div>
+                <h3 className="mt-5 text-slate-900 text-[17px] sm:text-lg font-extrabold tracking-tight leading-snug">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-slate-500 text-sm sm:text-[15px] leading-relaxed">
+                  {item.body}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Reassurance footer line */}
+        <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+          <div className="flex -space-x-2 shrink-0">
+            {["#7BB6FF", "#A78BFA", "#34D399", "#FCD34D"].map((c, i) => (
+              <span
+                key={i}
+                aria-hidden="true"
+                className="w-9 h-9 rounded-full border-2 border-white"
+                style={{ background: `linear-gradient(135deg, ${c}, ${c}AA)` }}
+              />
+            ))}
+          </div>
+          <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed">
+            Most engagements start with a short, no-pressure call — usually 30
+            minutes. We&apos;ll be honest about whether we&apos;re the right fit,
+            even if the answer is &ldquo;not yet.&rdquo;
+          </p>
+          <Link
+            href="/schedule"
+            className="group sm:ml-auto shrink-0 inline-flex items-center gap-2 text-slate-900 hover:text-slate-700 font-semibold text-sm transition-colors"
+          >
+            Book that call
+            <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>
@@ -378,50 +591,65 @@ function CaseCard({ study, delay }: { study: CaseStudy; delay: number }) {
     <Link
       href={`/work/${study.id}`}
       id={study.id}
-      className="group relative rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden p-6 sm:p-7"
+      className="group relative rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
       style={{
         animation: `fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both`,
         animationDelay: `${delay}ms`,
       }}
     >
       <div
-        className="absolute -top-px -right-px w-40 h-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute -top-px -right-px w-40 h-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"
         style={{
           background: `radial-gradient(circle at top right, ${study.color}28, transparent 65%)`,
         }}
       />
       <div
-        className="absolute top-0 left-6 right-6 h-px scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
+        className="absolute top-0 left-6 right-6 h-px scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 z-10"
         style={{
           background: `linear-gradient(90deg, transparent, ${study.color}, transparent)`,
         }}
       />
 
+      {/* Cover image area */}
       <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center border border-white/[0.08]"
-            style={{ background: `${study.color}18` }}
+        <CaseCover study={study} aspect="16/9" rounded="rounded-none" variant="dark" />
+        {/* Industry chip overlay */}
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          <span
+            className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full backdrop-blur-md bg-black/35 text-white border border-white/15"
           >
-            <Icon className="w-5 h-5" style={{ color: study.color }} strokeWidth={1.8} />
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: study.color }}
+            />
+            {study.industry}
+          </span>
+        </div>
+        {/* Icon chip in corner */}
+        <div
+          className="absolute top-3 right-3 w-9 h-9 rounded-xl flex items-center justify-center border border-white/15 backdrop-blur-md bg-black/30"
+          style={{ background: `${study.color}26` }}
+        >
+          <Icon className="w-[18px] h-[18px]" style={{ color: study.color }} strokeWidth={1.8} />
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="relative p-6 sm:p-7">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="text-white text-xl sm:text-2xl font-extrabold tracking-tight">
+              {study.client}
+            </h3>
+            <p className="mt-1.5 text-white/85 text-sm sm:text-[15px] font-semibold leading-snug">
+              {study.headline}
+            </p>
           </div>
-          <span className="w-9 h-9 rounded-full border border-white/15 group-hover:border-white/40 group-hover:bg-white/[0.06] flex items-center justify-center transition-all">
+          <span className="shrink-0 w-9 h-9 rounded-full border border-white/15 group-hover:border-white/40 group-hover:bg-white/[0.06] flex items-center justify-center transition-all">
             <ArrowUpRight className="w-4 h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
           </span>
         </div>
 
-        <div className="mt-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/55">
-          <span>{study.industry}</span>
-          <span className="w-1 h-1 rounded-full bg-blue-300/40" />
-          <span>{study.service}</span>
-        </div>
-
-        <h3 className="mt-2 text-white text-xl sm:text-2xl font-extrabold tracking-tight">
-          {study.client}
-        </h3>
-        <p className="mt-1.5 text-white/85 text-sm sm:text-[15px] font-semibold leading-snug">
-          {study.headline}
-        </p>
         <p className="mt-3 text-blue-100/55 text-sm leading-relaxed">
           {study.description}
         </p>
@@ -454,11 +682,92 @@ function CaseCard({ study, delay }: { study: CaseStudy; delay: number }) {
   );
 }
 
-/* ───────────────────────── Impact (white) ───────────────────────── */
+/* ───────────────────────── Voices (white) ───────────────────────── */
+
+function Voices() {
+  const quotes = CASES.slice(0, 3);
+
+  return (
+    <section className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28">
+      <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
+
+        <div className="max-w-3xl mb-12 sm:mb-14">
+          <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-400 uppercase">
+            <span className="h-px w-6 sm:w-8 bg-slate-300" />
+            In their own words
+          </div>
+          <h2 className="mt-4 font-extrabold tracking-tight text-slate-900 text-3xl sm:text-4xl md:text-[3rem] leading-[1.05]">
+            What our clients say after{" "}
+            <span className="relative inline-block">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 right-0 bottom-1 sm:bottom-2 h-2.5 sm:h-3 bg-amber-300/85 rounded-[3px]"
+              />
+              <span className="relative">the dust settles</span>
+            </span>
+            .
+          </h2>
+          <p className="mt-4 text-slate-500 text-base sm:text-lg leading-relaxed max-w-2xl">
+            The quotes below come from the people who lived through the
+            projects — engineers, founders, and product leads. Not marketing
+            blurbs.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+          {quotes.map((c) => (
+            <figure
+              key={c.id}
+              className="group relative rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 hover:border-slate-300 hover:shadow-[0_4px_20px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col"
+            >
+              <div
+                aria-hidden="true"
+                className="absolute -top-px left-6 right-6 h-px opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`,
+                }}
+              />
+              <Quote
+                className="w-7 h-7 text-slate-200"
+                strokeWidth={1.5}
+              />
+              <blockquote className="mt-4 text-slate-700 text-[15px] sm:text-base leading-relaxed flex-1">
+                &ldquo;{c.quote.text}&rdquo;
+              </blockquote>
+              <figcaption className="mt-6 pt-5 border-t border-slate-200/70 flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                  style={{
+                    background: `linear-gradient(135deg, ${c.quote.avatar.from}, ${c.quote.avatar.to})`,
+                  }}
+                >
+                  {c.quote.author
+                    .split(" ")
+                    .map((s) => s[0])
+                    .slice(0, 2)
+                    .join("")}
+                </span>
+                <div className="min-w-0">
+                  <div className="text-sm font-bold text-slate-900 truncate">
+                    {c.quote.author}
+                  </div>
+                  <div className="text-xs text-slate-500 truncate">{c.quote.role}</div>
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── Impact (white, humanized) ───────────────────────── */
 
 function ImpactSection() {
   return (
-    <section className="relative w-full bg-white py-20 sm:py-24 md:py-28">
+    <section className="relative w-full bg-slate-50/60 py-20 sm:py-24 md:py-28 border-y border-slate-200/70">
       <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 
         <div className="max-w-3xl mb-12 sm:mb-14">
@@ -477,6 +786,10 @@ function ImpactSection() {
             </span>
             .
           </h2>
+          <p className="mt-4 text-slate-500 text-base sm:text-lg leading-relaxed max-w-2xl">
+            These aren&apos;t vanity metrics — they&apos;re what we&apos;ve
+            consistently delivered across every engagement since we started.
+          </p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -493,8 +806,11 @@ function ImpactSection() {
                 <div className="mt-5 text-slate-900 text-3xl sm:text-4xl font-extrabold tracking-tight">
                   {s.value}
                 </div>
-                <div className="mt-1.5 text-slate-500 text-xs sm:text-sm font-medium">
+                <div className="mt-1.5 text-slate-800 text-sm font-semibold">
                   {s.label}
+                </div>
+                <div className="mt-1 text-slate-500 text-xs sm:text-[13px] leading-relaxed">
+                  {s.sublabel}
                 </div>
               </div>
             );
@@ -557,5 +873,98 @@ function FinalCTA() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ───────────────────────── Shared: Case cover (image w/ graceful fallback) ───────────────────────── */
+
+function CaseCover({
+  study,
+  aspect,
+  rounded,
+  variant = "light",
+}: {
+  study: CaseStudy;
+  aspect: "4/3" | "16/9";
+  rounded: string;
+  variant?: "light" | "dark";
+}) {
+  const Icon = study.icon;
+  const aspectClass = aspect === "16/9" ? "aspect-[16/9]" : "aspect-[4/3]";
+
+  // Background-image keeps things graceful when the file isn't dropped in yet —
+  // browser silently shows the fallback layers below.
+  const bg = study.cover ? `url(${study.cover})` : undefined;
+
+  const isLight = variant === "light";
+
+  return (
+    <div
+      className={`relative ${aspectClass} ${rounded} overflow-hidden ${
+        isLight
+          ? "border border-slate-200 bg-gradient-to-br from-slate-50 to-white"
+          : "border-b border-white/[0.06] bg-gradient-to-br from-white/[0.03] to-transparent"
+      }`}
+    >
+      {/* Layer 1 — abstract bars fallback (always rendered, sits behind image) */}
+      <div className="absolute inset-0 grid grid-cols-6 gap-3 p-5">
+        {Array.from({ length: 24 }).map((_, i) => {
+          const h = Math.sin(i * 0.7) * 40 + 60;
+          return (
+            <div
+              key={i}
+              className="rounded-md"
+              style={{
+                height: `${h}%`,
+                background:
+                  i % 7 === 0
+                    ? `linear-gradient(180deg, ${study.color}AA, ${study.color}33)`
+                    : isLight
+                      ? "rgba(15,23,42,0.04)"
+                      : "rgba(255,255,255,0.04)",
+                alignSelf: "end",
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* Layer 2 — center icon badge (still part of the fallback look) */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_8px_24px_rgba(15,23,42,0.12)] ${
+            isLight ? "bg-white" : "bg-[#0C1C3D]"
+          }`}
+        >
+          <Icon
+            className="w-8 h-8"
+            style={{ color: study.color }}
+            strokeWidth={1.6}
+          />
+        </div>
+      </div>
+
+      {/* Layer 3 — real image when path is set. Sits on top, hides the fallback. */}
+      {bg && (
+        <div
+          aria-label={`${study.client} cover`}
+          role="img"
+          className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-[1.02]"
+          style={{ backgroundImage: bg }}
+        />
+      )}
+
+      {/* Layer 4 — subtle bottom gradient for dark variant readability */}
+      {!isLight && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(12,28,61,0) 50%, rgba(12,28,61,0.45) 100%)",
+          }}
+        />
+      )}
+    </div>
   );
 }

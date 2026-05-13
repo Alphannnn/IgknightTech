@@ -18,11 +18,14 @@ import {
 export default function SolutionsPage() {
   const [activeId, setActiveId] = useState<string>(INDUSTRIES[0].id);
 
-  // Honor hash on initial load (e.g., navbar links: /solutions#fintech-banking)
+  // Honor hash on initial load (e.g., navbar links: /solutions#fintech-banking).
+  // setState in an effect is intentional here — we're syncing from window.location,
+  // which is an external system unavailable during SSR.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const hash = window.location.hash.slice(1);
     if (hash && INDUSTRIES.find((i) => i.id === hash)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveId(hash);
     }
   }, []);

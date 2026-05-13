@@ -26,12 +26,6 @@ import {
   HeartPulse,
   ShoppingBag,
   Building2,
-  // Resources
-  Newspaper,
-  Mic,
-  Mail,
-  Wrench,
-  FileText,
   // Company
   Building,
   Briefcase,
@@ -56,12 +50,14 @@ type MegaItem = {
 
 type NavLink = {
   label: string;
-  items: MegaItem[];
-  headerTitle: string;
-  headerSubtitle: string;
-  footerText: string;
-  footerCtaText: string;
-  footerCtaHref: string;
+  /** When set, renders as a plain link with no mega dropdown. */
+  simpleHref?: string;
+  items?: MegaItem[];
+  headerTitle?: string;
+  headerSubtitle?: string;
+  footerText?: string;
+  footerCtaText?: string;
+  footerCtaHref?: string;
   viewAllHref?: string;
   align?: "center" | "right";
 };
@@ -121,22 +117,9 @@ const navLinks: NavLink[] = [
     ],
   },
   {
-    label: "Resources",
+    label: "Blog",
+    simpleHref: "/resources",
     align: "right",
-    headerTitle: "Engineering, in public",
-    headerSubtitle: "Writing, open source, and talks from the team.",
-    footerText: "Stay in the loop",
-    footerCtaText: "Subscribe",
-    footerCtaHref: "/resources#newsletter",
-    viewAllHref: "/resources",
-    items: [
-      { title: "Engineering Blog", desc: "Deep-dives, post-mortems, and opinion pieces.",   icon: Newspaper, accent: "#7BB6FF", tag: "Articles", href: "/resources#blog" },
-      { title: "Open Source",      desc: "Tools and libraries we maintain in the open.",    icon: Code2,     accent: "#A78BFA", tag: "Code",     href: "/resources#open-source" },
-      { title: "Speaking & Talks", desc: "Conferences, podcasts, and live events.",         icon: Mic,       accent: "#FCD34D", tag: "Events",   href: "/resources#speaking" },
-      { title: "Newsletter",       desc: "Monthly drop — engineering, hiring, wins.",       icon: Mail,      accent: "#F472B6", tag: "Weekly",   href: "/resources#newsletter" },
-      { title: "Free Tools",       desc: "Calculators and starters we made for free.",      icon: Wrench,    accent: "#34D399", tag: "Tools",    href: "/resources#open-source" },
-      { title: "Postmortems",      desc: "What we learned the hard way, written up clean.", icon: FileText,  accent: "#60A5FA", tag: "Lessons",  href: "/resources#blog" },
-    ],
   },
   {
     label: "Company",
@@ -218,48 +201,62 @@ export default function Navbar() {
 
         {/* ── Desktop Nav Links ── */}
         <ul className="hidden lg:flex items-center h-full gap-0.5">
-          {navLinks.map((link) => (
-            <li
-              key={link.label}
-              className="relative h-full flex items-center"
-              onMouseEnter={() => openMenu(link.label)}
-              onMouseLeave={closeMenu}
-            >
-              <button
-                className={`flex items-center gap-1 text-sm font-medium px-3.5 h-full transition-all duration-200 ${
-                  activeMenu === link.label
-                    ? "text-white"
-                    : "text-[#94afd4] hover:text-white"
-                }`}
-                aria-expanded={activeMenu === link.label}
-              >
-                {link.label}
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-all duration-300 ${
-                    activeMenu === link.label
-                      ? "rotate-180 text-[#4f9ef8]"
-                      : "opacity-60"
-                  }`}
-                />
-              </button>
-
-              <div
-                className={`absolute top-full pt-3 transition-all duration-300 ease-out ${
-                  link.align === "right"
-                    ? "right-0"
-                    : "left-1/2 -translate-x-1/2"
-                } ${
-                  activeMenu === link.label
-                    ? "opacity-100 translate-y-0 pointer-events-auto"
-                    : "opacity-0 translate-y-2 pointer-events-none"
-                }`}
+          {navLinks.map((link) => {
+            if (link.simpleHref) {
+              return (
+                <li key={link.label} className="relative h-full flex items-center">
+                  <Link
+                    href={link.simpleHref}
+                    className="text-sm font-medium px-3.5 h-full inline-flex items-center text-[#94afd4] hover:text-white transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            }
+            return (
+              <li
+                key={link.label}
+                className="relative h-full flex items-center"
                 onMouseEnter={() => openMenu(link.label)}
                 onMouseLeave={closeMenu}
               >
-                <MegaDropdown link={link} />
-              </div>
-            </li>
-          ))}
+                <button
+                  className={`flex items-center gap-1 text-sm font-medium px-3.5 h-full transition-all duration-200 ${
+                    activeMenu === link.label
+                      ? "text-white"
+                      : "text-[#94afd4] hover:text-white"
+                  }`}
+                  aria-expanded={activeMenu === link.label}
+                >
+                  {link.label}
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-all duration-300 ${
+                      activeMenu === link.label
+                        ? "rotate-180 text-[#4f9ef8]"
+                        : "opacity-60"
+                    }`}
+                  />
+                </button>
+
+                <div
+                  className={`absolute top-full pt-3 transition-all duration-300 ease-out ${
+                    link.align === "right"
+                      ? "right-0"
+                      : "left-1/2 -translate-x-1/2"
+                  } ${
+                    activeMenu === link.label
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 translate-y-2 pointer-events-none"
+                  }`}
+                  onMouseEnter={() => openMenu(link.label)}
+                  onMouseLeave={closeMenu}
+                >
+                  <MegaDropdown link={link} />
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         {/* ── Desktop CTAs ── */}
@@ -303,7 +300,20 @@ export default function Navbar() {
           }`}
         >
           <div className="px-4 py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => {
+              if (link.simpleHref) {
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.simpleHref}
+                    onClick={() => setMobileOpen(false)}
+                    className="block px-4 py-3.5 text-[#c8d8f0] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                );
+              }
+              return (
               <div key={link.label} className="rounded-xl overflow-hidden">
                 <button
                   className="w-full flex items-center justify-between px-4 py-3.5 text-[#c8d8f0] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
@@ -329,7 +339,7 @@ export default function Navbar() {
                   }`}
                 >
                   <div className="bg-[#112040] rounded-xl mx-1 mb-1 p-2 grid grid-cols-2 gap-1">
-                    {link.items.map((item) => {
+                    {(link.items ?? []).map((item) => {
                       const Icon = item.icon;
                       return (
                         <Link
@@ -369,7 +379,8 @@ export default function Navbar() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
 
             {/* Mobile CTAs */}
             <div className="mt-4 flex flex-col gap-3 px-1 pb-8">
@@ -422,7 +433,7 @@ function MegaDropdown({ link }: { link: NavLink }) {
 
       {/* Items grid */}
       <div className="p-3 grid grid-cols-3 gap-1">
-        {link.items.map((item) => {
+        {(link.items ?? []).map((item) => {
           const Icon = item.icon;
           return (
             <Link
@@ -512,7 +523,7 @@ function MegaDropdown({ link }: { link: NavLink }) {
           </span>
         </div>
         <Link
-          href={link.footerCtaHref}
+          href={link.footerCtaHref ?? "/schedule"}
           className="group flex-shrink-0 flex items-center gap-1.5 text-white text-xs font-semibold bg-[#4f9ef8] hover:bg-[#3a8ef0] px-3.5 py-1.5 rounded-lg transition-all duration-200 shadow-[0_0_16px_rgba(79,158,248,0.3)] hover:shadow-[0_0_24px_rgba(79,158,248,0.5)]"
         >
           {link.footerCtaText}

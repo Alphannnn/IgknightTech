@@ -36,6 +36,16 @@ export type ServiceProcessStep = {
   desc: string;
 };
 
+export type ServiceStackGroup = {
+  category: string;
+  items: string[];
+};
+
+export type ServiceOutcomes = {
+  timeframe: string;
+  delivers: string[];
+};
+
 export type Service = {
   id: string;
   title: string;
@@ -48,7 +58,8 @@ export type Service = {
   color: string;
 
   capabilities: ServiceCapability[];
-  stack: string[];
+  stackGroups: ServiceStackGroup[];
+  outcomes: ServiceOutcomes;
   process: ServiceProcessStep[];
   relatedCases: string[];
 
@@ -73,7 +84,19 @@ export const SERVICES: Service[] = [
       { title: "Frontend engineering",         desc: "Production-grade web apps, dashboards, and internal tools.",          icon: Globe },
       { title: "Migrations & refactoring",     desc: "Modernize legacy systems incrementally — without downtime.",          icon: RefreshCw },
     ],
-    stack: ["TypeScript", "Go", "Python", "Rust", "PostgreSQL", "Redis", "AWS", "Docker"],
+    stackGroups: [
+      { category: "Languages",      items: ["TypeScript", "Go", "Python", "Rust"] },
+      { category: "Data",           items: ["PostgreSQL", "Redis"] },
+      { category: "Infrastructure", items: ["AWS", "Docker", "Terraform"] },
+    ],
+    outcomes: {
+      timeframe: "30 days",
+      delivers: [
+        "A working slice of your platform in staging, deployed through proper CI/CD.",
+        "A written architecture doc your team can challenge, edit, and own.",
+        "A quarter's worth of backlog scoped with hours and confidence levels — not vibes.",
+      ],
+    },
     process: [
       { num: "01", title: "Discover", desc: "We map your problem space, constraints, and existing systems." },
       { num: "02", title: "Architect", desc: "Design the right system shape — boring where possible, novel where it counts." },
@@ -101,7 +124,21 @@ export const SERVICES: Service[] = [
       { title: "Internal tools",         desc: "Admin panels and operations tools your team will love.",          icon: Wrench },
       { title: "Performance & SEO",      desc: "Core Web Vitals in the green, indexability done right.",          icon: Gauge },
     ],
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Vercel", "GraphQL", "tRPC", "Sanity"],
+    stackGroups: [
+      { category: "Frameworks", items: ["Next.js", "React"] },
+      { category: "Languages",  items: ["TypeScript"] },
+      { category: "Styling",    items: ["Tailwind CSS"] },
+      { category: "Backend",    items: ["GraphQL", "tRPC"] },
+      { category: "Content & hosting", items: ["Sanity", "Vercel"] },
+    ],
+    outcomes: {
+      timeframe: "3 weeks",
+      delivers: [
+        "A live preview URL with your top five pages running on the new design system.",
+        "Lighthouse scores above 95 across performance, accessibility, and SEO.",
+        "Analytics wired up so every change is measurable from day one — not after launch.",
+      ],
+    },
     process: [
       { num: "01", title: "Discover", desc: "Audit your current site, map user journeys, identify the wins." },
       { num: "02", title: "Design",   desc: "Information architecture, design system, hi-fi mockups." },
@@ -129,7 +166,20 @@ export const SERVICES: Service[] = [
       { title: "React Native",      desc: "One codebase across platforms when the math actually works.",            icon: Code2 },
       { title: "Store optimization", desc: "Listings, ratings, and growth loops that compound over time.",          icon: TrendingUp },
     ],
-    stack: ["Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "React Native", "Expo", "GraphQL", "Firebase"],
+    stackGroups: [
+      { category: "iOS",            items: ["Swift", "SwiftUI"] },
+      { category: "Android",        items: ["Kotlin", "Jetpack Compose"] },
+      { category: "Cross-platform", items: ["React Native", "Expo"] },
+      { category: "Services",       items: ["GraphQL", "Firebase"] },
+    ],
+    outcomes: {
+      timeframe: "4 weeks",
+      delivers: [
+        "An internal TestFlight and Play Store build running on real devices.",
+        "Core user flows working end-to-end, with crash and analytics SDKs already in place.",
+        "A release plan covering store submission, phased rollout, and the KPIs we'll watch.",
+      ],
+    },
     process: [
       { num: "01", title: "Discover", desc: "Platform strategy — native, cross-platform, or hybrid. We make the call together." },
       { num: "02", title: "Design",   desc: "Platform-appropriate UX. iOS feels like iOS, Android feels like Android." },
@@ -157,7 +207,20 @@ export const SERVICES: Service[] = [
       { title: "Data engineering",   desc: "Pipelines, warehouses, and lakehouse architectures that scale.",          icon: Database },
       { title: "Analytics & BI",     desc: "Dashboards and reporting that earn an executive's trust.",                icon: BarChart3 },
     ],
-    stack: ["Python", "PyTorch", "TensorFlow", "AWS SageMaker", "Pinecone", "dbt", "Snowflake", "Airflow"],
+    stackGroups: [
+      { category: "Languages",     items: ["Python"] },
+      { category: "ML frameworks", items: ["PyTorch", "TensorFlow"] },
+      { category: "Platforms",     items: ["AWS SageMaker", "Pinecone"] },
+      { category: "Data & pipelines", items: ["dbt", "Snowflake", "Airflow"] },
+    ],
+    outcomes: {
+      timeframe: "30 days",
+      delivers: [
+        "Your first model in production behind a feature flag, serving real traffic.",
+        "A training pipeline that re-runs on schedule with automatic rollback paths.",
+        "Observability dashboards covering drift, latency, and per-tenant inference cost.",
+      ],
+    },
     process: [
       { num: "01", title: "Audit",   desc: "What models exist, what data feeds them, where the gaps are." },
       { num: "02", title: "Build",   desc: "Pipelines, infra, and the ML platform that turns research into product." },
@@ -185,7 +248,20 @@ export const SERVICES: Service[] = [
       { title: "CI/CD pipelines",         desc: "Automated, fast, and trustworthy — ship every commit safely.",        icon: GitBranch },
       { title: "Observability & SRE",     desc: "Metrics, logs, traces, and on-call practices that actually work.",    icon: Activity },
     ],
-    stack: ["AWS", "GCP", "Terraform", "Kubernetes", "Datadog", "Cloudflare", "ArgoCD", "Pulumi"],
+    stackGroups: [
+      { category: "Cloud",          items: ["AWS", "GCP"] },
+      { category: "IaC",            items: ["Terraform", "Pulumi"] },
+      { category: "Orchestration",  items: ["Kubernetes", "ArgoCD"] },
+      { category: "Observability & edge", items: ["Datadog", "Cloudflare"] },
+    ],
+    outcomes: {
+      timeframe: "6 weeks",
+      delivers: [
+        "Your full infrastructure declared in Terraform — reviewable and reproducible.",
+        "CI/CD pipelines that ship every commit to staging in under ten minutes.",
+        "On-call runbooks and dashboards your engineers can use on day one.",
+      ],
+    },
     process: [
       { num: "01", title: "Audit",    desc: "Map current infrastructure, costs, risks, and incident history." },
       { num: "02", title: "Architect", desc: "Design the right cloud topology — simpler is almost always better." },
@@ -213,7 +289,20 @@ export const SERVICES: Service[] = [
       { title: "Design systems",   desc: "Reusable components, design tokens, documentation your devs use.",      icon: Layers },
       { title: "Prototyping",      desc: "Interactive prototypes for validating ideas before writing code.",       icon: MousePointer },
     ],
-    stack: ["Figma", "FigJam", "Framer", "Notion", "Linear", "Storybook", "Maze", "Lookback"],
+    stackGroups: [
+      { category: "Design",         items: ["Figma", "FigJam", "Framer"] },
+      { category: "Collaboration",  items: ["Notion", "Linear"] },
+      { category: "Hand-off",       items: ["Storybook"] },
+      { category: "Research",       items: ["Maze", "Lookback"] },
+    ],
+    outcomes: {
+      timeframe: "4 weeks",
+      delivers: [
+        "A high-fidelity prototype tested with at least eight real users.",
+        "A design system with tokens, components, and engineer-ready documentation.",
+        "A measurable hypothesis behind every screen — not just designer instinct.",
+      ],
+    },
     process: [
       { num: "01", title: "Research", desc: "User interviews, journey mapping, and the questions that shape decisions." },
       { num: "02", title: "Design",   desc: "From low-fi sketches to high-fi screens, iteratively with your team." },

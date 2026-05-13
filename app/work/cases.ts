@@ -21,6 +21,9 @@ export type CaseStudy = {
   teamSize: string;
   year: string;
 
+  cover?: string;
+  beforeAfter?: { metric: string; before: string; after: string }[];
+
   tech: string[];
 
   challenge: {
@@ -65,6 +68,13 @@ export const CASES: CaseStudy[] = [
     duration: "16 weeks",
     teamSize: "7 engineers",
     year: "2024",
+
+    cover: "/work/stratify/cover.jpg",
+    beforeAfter: [
+      { metric: "Page load (peak)", before: "4.2s", after: "410ms" },
+      { metric: "Deploy time",       before: "45 min", after: "8 min" },
+      { metric: "Sign-up conversion", before: "100%", after: "+38%" },
+    ],
 
     tech: ["Go", "PostgreSQL", "Kubernetes", "Redis", "Datadog", "Terraform"],
 
@@ -125,6 +135,8 @@ export const CASES: CaseStudy[] = [
     teamSize: "5 engineers + 2 designers",
     year: "2024",
 
+    cover: "/work/vyra/cover.jpg",
+
     tech: ["React Native", "TypeScript", "GraphQL", "Firebase", "Detox"],
 
     challenge: {
@@ -182,6 +194,8 @@ export const CASES: CaseStudy[] = [
     duration: "18 weeks",
     teamSize: "6 engineers + 1 security lead",
     year: "2024",
+
+    cover: "/work/helio/cover.jpg",
 
     tech: ["Next.js", "Node.js", "AWS HIPAA", "DynamoDB", "Cognito", "WAF"],
 
@@ -241,6 +255,8 @@ export const CASES: CaseStudy[] = [
     teamSize: "3 designers + 4 engineers",
     year: "2024",
 
+    cover: "/work/brightline/cover.jpg",
+
     tech: ["React", "TypeScript", "Figma", "Storybook", "PostHog"],
 
     challenge: {
@@ -299,6 +315,8 @@ export const CASES: CaseStudy[] = [
     teamSize: "3 ML engineers",
     year: "2024",
 
+    cover: "/work/kepler/cover.jpg",
+
     tech: ["Python", "PyTorch", "SageMaker", "Pinecone", "Airflow", "MLflow"],
 
     challenge: {
@@ -356,6 +374,8 @@ export const CASES: CaseStudy[] = [
     duration: "9 months",
     teamSize: "4 engineers + 1 SRE",
     year: "2023",
+
+    cover: "/work/aurora/cover.jpg",
 
     tech: ["AWS", "Terraform", "Datadog", "Cloudflare", "Kubernetes"],
 

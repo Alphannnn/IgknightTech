@@ -6,16 +6,20 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { SERVICES } from "../services-data";
 import { CASES } from "../../work/cases";
+import { ServicePreview } from "../ServicePreview";
 import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Check,
+  Clock,
 } from "lucide-react";
 
 export default function ServiceDetail() {
   const params = useParams();
   const id = params.id as string;
-  const service = SERVICES.find((s) => s.id === id);
+  const serviceIndex = SERVICES.findIndex((s) => s.id === id);
+  const service = SERVICES[serviceIndex];
 
   if (!service) {
     return (
@@ -49,6 +53,10 @@ export default function ServiceDetail() {
   const Icon = service.icon;
   const relatedCases = CASES.filter((c) => service.relatedCases.includes(c.id));
   const otherServices = SERVICES.filter((s) => s.id !== service.id);
+  const total = SERVICES.length;
+  const indexLabel = `${String(serviceIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+  const prevService = SERVICES[(serviceIndex - 1 + total) % total];
+  const nextService = SERVICES[(serviceIndex + 1) % total];
 
   return (
     <>
@@ -64,14 +72,14 @@ export default function ServiceDetail() {
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             All services
           </Link>
-          <span className="text-blue-200/40 text-xs font-mono">
-            Service · {service.navTag}
+          <span className="font-mono text-blue-200/40 text-xs tabular-nums">
+            {indexLabel} · {service.navTag}
           </span>
         </div>
       </div>
 
-      {/* ─────── Hero (dark) ─────── */}
-      <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-16 sm:py-20 lg:py-24">
+      {/* ─────── Hero (dark, editorial) ─────── */}
+      <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-16 sm:py-20 lg:py-28">
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.32]"
           style={{
@@ -92,26 +100,29 @@ export default function ServiceDetail() {
         />
 
         <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">
+              <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-blue-300/80 uppercase">
+                <span className="font-mono tabular-nums text-blue-300/60">
+                  {indexLabel}
+                </span>
+                <span className="h-px w-6 sm:w-8 bg-blue-300/40" />
                 <span>{service.navTag}</span>
               </div>
 
-              <h1 className="mt-4 text-white font-extrabold tracking-tight leading-[1.05] text-4xl sm:text-5xl md:text-[3.5rem]">
+              <h1 className="mt-5 text-white font-extrabold tracking-tight leading-[1.02] text-4xl sm:text-5xl md:text-[3.75rem] lg:text-[4.25rem]">
                 {service.title}
               </h1>
 
-              <p className="mt-3 text-white/85 text-xl sm:text-2xl font-semibold leading-snug">
+              <p className="mt-4 text-white/90 text-xl sm:text-2xl font-semibold leading-snug max-w-xl">
                 {service.tagline}
               </p>
 
-              <p className="mt-5 text-blue-100/60 text-base sm:text-lg leading-relaxed max-w-xl">
+              <p className="mt-6 text-blue-100/60 text-base sm:text-lg leading-relaxed max-w-xl">
                 {service.longDescription}
               </p>
 
-              <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <Link
                   href="/schedule"
                   className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
@@ -120,43 +131,151 @@ export default function ServiceDetail() {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <a
-                  href="#capabilities"
+                  href="#outcomes"
                   className="group inline-flex items-center gap-2 text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl border border-white/15 hover:border-white/35 hover:bg-white/[0.04] transition-all"
                 >
-                  What we deliver
+                  What you&apos;ll have
                   <ArrowRight className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
                 </a>
               </div>
             </div>
 
-            {/* Right — stat card */}
+            {/* Right — illustrated preview + stat + timeframe */}
             <div className="relative">
               <div
-                className="absolute -inset-6 rounded-3xl opacity-30 blur-3xl pointer-events-none"
+                className="absolute -inset-8 rounded-3xl opacity-30 blur-3xl pointer-events-none"
                 style={{ background: `radial-gradient(circle, ${service.color}, transparent 70%)` }}
               />
-              <div className="relative rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-8 sm:p-10 text-center">
-                <div
-                  className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center border border-white/[0.08]"
-                  style={{ background: `${service.color}1F` }}
-                >
-                  <Icon
-                    className="w-8 h-8"
+              <div className="group relative rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm overflow-hidden">
+
+                {/* Top: service preview illustration */}
+                <div className="relative aspect-[4/3] border-b border-white/[0.06]">
+                  <ServicePreview service={service} rounded="rounded-none" />
+
+                  {/* Icon chip overlay */}
+                  <div className="absolute top-4 left-4 flex items-center gap-2">
+                    <span
+                      className="w-9 h-9 rounded-xl flex items-center justify-center border backdrop-blur-md"
+                      style={{
+                        background: `${service.color}26`,
+                        borderColor: `${service.color}40`,
+                      }}
+                    >
+                      <Icon
+                        className="w-4.5 h-4.5"
+                        style={{ color: service.color, width: 18, height: 18 }}
+                        strokeWidth={1.8}
+                      />
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1 rounded-full backdrop-blur-md bg-white/10 text-white/85 border border-white/15">
+                      {service.navTag}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Middle: hero stat */}
+                <div className="px-6 sm:px-8 py-6 sm:py-7 text-center">
+                  <div
+                    className="text-4xl sm:text-5xl font-extrabold tracking-tight"
                     style={{ color: service.color }}
-                    strokeWidth={1.6}
-                  />
+                  >
+                    {service.stat.value}
+                  </div>
+                  <div className="mt-1.5 text-blue-100/65 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em]">
+                    {service.stat.label}
+                  </div>
                 </div>
-                <div
-                  className="mt-6 text-5xl sm:text-6xl font-extrabold tracking-tight"
-                  style={{ color: service.color }}
-                >
-                  {service.stat.value}
-                </div>
-                <div className="mt-2 text-blue-100/65 text-sm font-semibold uppercase tracking-[0.15em]">
-                  {service.stat.label}
+
+                {/* Bottom: timeframe band */}
+                <div className="border-t border-white/[0.06] bg-white/[0.02] px-6 py-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-blue-200/60 text-[11px] font-bold uppercase tracking-[0.18em]">
+                    <Clock className="w-3.5 h-3.5" strokeWidth={1.8} />
+                    First outcomes in
+                  </div>
+                  <div
+                    className="text-sm font-bold tracking-tight"
+                    style={{ color: service.color }}
+                  >
+                    {service.outcomes.timeframe}
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────── Outcomes (off-white, the trust-builder for non-tech buyers) ─────── */}
+      <section
+        id="outcomes"
+        className="relative w-full bg-[#FAFAF8] overflow-hidden py-20 sm:py-24 border-b border-slate-200/70"
+      >
+        <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
+
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20">
+            {/* Left: heading + timeframe */}
+            <div>
+              <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-500 uppercase">
+                <span className="h-px w-6 sm:w-8 bg-slate-300" />
+                Outcomes
+              </div>
+              <h2 className="mt-4 font-extrabold tracking-tight text-slate-900 text-3xl sm:text-4xl md:text-[2.75rem] leading-[1.05]">
+                What you&apos;ll have in{" "}
+                <span className="relative inline-block">
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 right-0 bottom-1 sm:bottom-2 h-2.5 sm:h-3 rounded-[3px]"
+                    style={{ background: `${service.color}80` }}
+                  />
+                  <span className="relative">{service.outcomes.timeframe}</span>
+                </span>
+                .
+              </h2>
+              <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed max-w-md">
+                Not slides. Not a kick-off deck. Concrete artifacts you can
+                touch, click, and show your team.
+              </p>
+
+              <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 max-w-sm">
+                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" strokeWidth={1.8} />
+                  Average start
+                </div>
+                <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+                  Most engagements move from first call to kick-off in{" "}
+                  <span className="font-bold text-slate-900">5 – 10 business days</span>,
+                  contracts permitting.
+                </p>
+              </div>
+            </div>
+
+            {/* Right: numbered outcomes list */}
+            <ol className="space-y-0">
+              {service.outcomes.delivers.map((line, i) => (
+                <li
+                  key={i}
+                  className={`grid grid-cols-[40px_1fr] gap-5 py-6 sm:py-7 ${
+                    i !== service.outcomes.delivers.length - 1
+                      ? "border-b border-slate-200/70"
+                      : ""
+                  }`}
+                >
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: `${service.color}1A` }}
+                  >
+                    <Check
+                      className="w-4 h-4"
+                      style={{ color: service.color }}
+                      strokeWidth={2.4}
+                    />
+                  </div>
+                  <p className="text-slate-700 text-base sm:text-[17px] leading-relaxed pt-1">
+                    {line}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
@@ -184,24 +303,40 @@ export default function ServiceDetail() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            {service.capabilities.map((c) => {
+            {service.capabilities.map((c, i) => {
               const CIcon = c.icon;
               return (
                 <article
                   key={c.title}
-                  className="group rounded-2xl border border-slate-200 bg-white p-6 hover:border-slate-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300"
+                  className="group relative rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 hover:border-slate-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 overflow-hidden"
                 >
+                  <div
+                    aria-hidden="true"
+                    className="absolute -top-px -right-px w-32 h-32 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at top right, ${service.color}1F, transparent 65%)`,
+                    }}
+                  />
                   <div className="flex items-start gap-4">
                     <div
                       className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 border border-slate-200"
                       style={{ background: `${service.color}15` }}
                     >
-                      <CIcon className="w-5 h-5" style={{ color: service.color }} strokeWidth={1.8} />
+                      <CIcon
+                        className="w-5 h-5"
+                        style={{ color: service.color }}
+                        strokeWidth={1.8}
+                      />
                     </div>
-                    <div>
-                      <h3 className="text-slate-900 text-base sm:text-lg font-bold tracking-tight">
-                        {c.title}
-                      </h3>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-slate-300 text-xs tabular-nums">
+                          0{i + 1}
+                        </span>
+                        <h3 className="text-slate-900 text-base sm:text-lg font-bold tracking-tight">
+                          {c.title}
+                        </h3>
+                      </div>
                       <p className="mt-1.5 text-slate-500 text-sm leading-relaxed">
                         {c.desc}
                       </p>
@@ -240,7 +375,8 @@ export default function ServiceDetail() {
               Our{" "}
               <span
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                  backgroundImage:
+                    "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -279,11 +415,11 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* ─────── Tech Stack (white) ─────── */}
+      {/* ─────── Stack (white, grouped) ─────── */}
       <section className="relative w-full bg-white py-20 sm:py-24">
         <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 
-          <div className="max-w-3xl mb-10">
+          <div className="max-w-3xl mb-12">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
               <span className="h-px w-6 bg-slate-300" />
               Stack
@@ -292,19 +428,40 @@ export default function ServiceDetail() {
               Our tools of choice.
             </h2>
             <p className="mt-3 text-slate-500 text-base sm:text-lg leading-relaxed">
-              We pick boring technology where we can and novel technology where it
-              matters — always optimizing for what your team can maintain.
+              We pick boring technology where we can and novel technology where
+              it matters — always optimizing for what your team can maintain.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {service.stack.map((tech) => (
-              <span
-                key={tech}
-                className="text-sm font-bold tracking-tight px-4 py-2 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-white transition-all"
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            {service.stackGroups.map((group, i) => (
+              <div
+                key={group.category}
+                className={`grid grid-cols-1 sm:grid-cols-[180px_1fr] lg:grid-cols-[220px_1fr] gap-3 sm:gap-6 px-5 sm:px-7 py-5 sm:py-6 ${
+                  i !== service.stackGroups.length - 1
+                    ? "border-b border-slate-200/80"
+                    : ""
+                }`}
               >
-                {tech}
-              </span>
+                <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  <span
+                    aria-hidden="true"
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ background: service.color }}
+                  />
+                  {group.category}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-sm font-bold tracking-tight px-3 py-1.5 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-white transition-all"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -361,7 +518,11 @@ export default function ServiceDetail() {
                         className="w-11 h-11 rounded-xl flex items-center justify-center border border-white/[0.08]"
                         style={{ background: `${c.color}18` }}
                       >
-                        <CIcon className="w-5 h-5" style={{ color: c.color }} strokeWidth={1.8} />
+                        <CIcon
+                          className="w-5 h-5"
+                          style={{ color: c.color }}
+                          strokeWidth={1.8}
+                        />
                       </div>
                       <ArrowUpRight className="w-5 h-5 text-white/20 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                     </div>
@@ -388,17 +549,17 @@ export default function ServiceDetail() {
         </section>
       )}
 
-      {/* ─────── Other Services (white) + CTA ─────── */}
+      {/* ─────── Other services + CTA (white) ─────── */}
       <section className="relative w-full bg-white py-20 sm:py-24">
         <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
 
           <div className="mb-12">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
               <span className="h-px w-6 bg-slate-300" />
-              Other services
+              Often paired with
             </div>
             <h2 className="mt-3 text-slate-900 text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Often paired with {service.title.toLowerCase()}
+              {service.title}, in context
             </h2>
           </div>
 
@@ -415,7 +576,11 @@ export default function ServiceDetail() {
                     className="w-10 h-10 rounded-xl flex items-center justify-center border border-slate-200"
                     style={{ background: `${s.color}15` }}
                   >
-                    <SIcon className="w-5 h-5" style={{ color: s.color }} strokeWidth={1.8} />
+                    <SIcon
+                      className="w-5 h-5"
+                      style={{ color: s.color }}
+                      strokeWidth={1.8}
+                    />
                   </div>
                   <h3 className="mt-4 text-slate-900 text-base font-bold tracking-tight">
                     {s.title}
@@ -432,19 +597,63 @@ export default function ServiceDetail() {
             })}
           </div>
 
+          {/* Prev / next service navigation */}
+          <div className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              href={`/services/${prevService.id}`}
+              className="group rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all duration-300 p-5 flex items-center gap-4"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:-translate-x-0.5 group-hover:text-slate-700 transition-all" />
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                  Previous
+                </div>
+                <div className="mt-0.5 text-slate-900 text-sm sm:text-base font-bold tracking-tight truncate">
+                  {prevService.title}
+                </div>
+              </div>
+            </Link>
+            <Link
+              href={`/services/${nextService.id}`}
+              className="group rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all duration-300 p-5 flex items-center justify-end gap-4 text-right"
+            >
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                  Next
+                </div>
+                <div className="mt-0.5 text-slate-900 text-sm sm:text-base font-bold tracking-tight truncate">
+                  {nextService.title}
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 group-hover:text-slate-700 transition-all" />
+            </Link>
+          </div>
+
           {/* CTA */}
-          <div className="mt-14 sm:mt-16 relative rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8 sm:p-10 md:p-14 overflow-hidden text-center">
-            <h2 className="font-extrabold tracking-tight text-slate-900 text-2xl sm:text-3xl md:text-4xl leading-[1.1] max-w-2xl mx-auto">
+          <div className="mt-14 sm:mt-16 relative rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8 sm:p-12 md:p-14 overflow-hidden text-center">
+            <div
+              className="absolute -top-32 left-1/2 -translate-x-1/2 w-[520px] h-[320px] rounded-full opacity-25 blur-3xl pointer-events-none"
+              style={{ background: `radial-gradient(circle, ${service.color}, transparent 70%)` }}
+            />
+            <div className="relative inline-flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-500 uppercase">
+              <span className="h-px w-6 sm:w-8 bg-slate-300" />
+              One conversation
+              <span className="h-px w-6 sm:w-8 bg-slate-300" />
+            </div>
+            <h2 className="relative mt-5 font-extrabold tracking-tight text-slate-900 text-2xl sm:text-3xl md:text-4xl leading-[1.1] max-w-2xl mx-auto">
               Let&apos;s talk about your{" "}
-              <span style={{ color: service.color }}>{service.title.toLowerCase()}</span>{" "}
+              <span style={{ color: service.color }}>
+                {service.title.toLowerCase()}
+              </span>{" "}
               project.
             </h2>
-            <p className="mt-4 text-slate-500 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-              Tell us where you are, what you need, and when you need it. We&apos;ll
-              come back within a business day.
+            <p className="relative mt-4 text-slate-500 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+              Tell us where you are, what you need, and when you need it.
+              We&apos;ll come back within a business day — with recommended
+              engagement model and honest pricing.
             </p>
 
-            <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="relative mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/schedule"
                 className="group inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_8px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.25)]"

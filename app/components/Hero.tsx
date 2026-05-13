@@ -301,10 +301,10 @@ export default function HeroSection() {
 
           <div className="mt-2 sm:mt-3">
             <Link
-              href="#"
+              href="/schedule"
               className="group inline-flex items-center gap-2.5 bg-[#4a8fd8] hover:bg-[#3a7fcb] text-white text-sm sm:text-[15px] font-bold px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_32px_rgba(74,144,217,0.5)] hover:shadow-[0_0_48px_rgba(74,144,217,0.75)]"
             >
-              Try Igknight free
+              Start a project
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
             </Link>
           </div>

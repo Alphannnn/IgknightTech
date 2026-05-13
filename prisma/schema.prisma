@@ -1,0 +1,133 @@
+// Igknight Tech — local admin backend
+// SQLite + Prisma. Connection string is set in .env (DATABASE_URL).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// A scheduled meeting from /schedule. Created by the public form,
+/// managed (confirmed / cancelled / completed) from /admin/meetings.
+model Meeting {
+  id          String   @id @default(cuid())
+
+  // Booker details
+  name        String
+  email       String
+  company     String?
+  message     String?
+
+  // What kind of meeting + when
+  meetingType String   // one of "discovery" | "consultation" | "technical" | "general"
+  date        DateTime // the requested calendar day (UTC midnight)
+  timeSlot    String   // human-readable time, e.g. "10:00 AM"
+
+  // Admin-managed lifecycle
+  status      String   @default("pending") // "pending" | "confirmed" | "cancelled" | "completed"
+  adminNotes  String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+  @@index([status])
+}
+
+/// Days the admin has explicitly marked unavailable, overriding the
+/// default availability. Used by both the /schedule date picker (to gray
+/// out the day) and the admin /admin/availability calendar.
+model AvailabilityOverride {
+  id        String   @id @default(cuid())
+  date      DateTime @unique // UTC midnight of the date
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+/// A long-form blog post. The body field is a JSON-stringified array of
+/// sections, each shaped as `{ heading?: string, paragraphs: string[] }`.
+/// Posts are addressed by their slug both in the public URL
+/// `/resources/blog/<slug>` and the admin edit URL `/admin/blog/<slug>`.
+model BlogPost {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  excerpt       String
+  category      String
+  categoryColor String   // e.g. "#7BB6FF"
+  author        String
+  authorRole    String
+  avatarFrom    String   // gradient stop 1
+  avatarTo      String   // gradient stop 2
+  date          DateTime // publication date
+  readTime      String   // e.g. "12 min read"
+  image         String?  // optional path to featured image
+  featured      Boolean  @default(false)
+  body          String   // JSON-stringified array of body sections
+  status        String   @default("published") // "draft" | "published"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  savedBy       SavedPost[]
+
+  @@index([status])
+  @@index([date])
+}
+
+/// A signed-in visitor. Identity is asserted via Google OAuth — we never
+/// store a password. `email` from Google is what we use to match meetings
+/// booked through /schedule, so the user's "My meetings" view shows any
+/// meeting whose email matches.
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String?
+  image      String?  // Google profile picture URL
+  googleId   String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  savedPosts SavedPost[]
+
+  @@index([email])
+}
+
+/// A blog post a user has bookmarked. Unique on (userId, postId) — saving
+/// the same post twice is a no-op.
+model SavedPost {
+  id      String   @id @default(cuid())
+  userId  String
+  postId  String
+  savedAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post    BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+/// An open role on /careers. `posted` is the actual publish date; the
+/// public page formats it as a relative string ("2d ago"). Setting
+/// `active=false` hides it from the public page without deleting it.
+model CareerRole {
+  id        String   @id @default(cuid())
+  title     String
+  dept      String   // "Engineering" | "Design" | "Product" | "Operations"
+  location  String
+  type      String   // "Full-time" | "Contract" | "Part-time"
+  posted    DateTime @default(now())
+  featured  Boolean  @default(false)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active])
+  @@index([dept])
+}

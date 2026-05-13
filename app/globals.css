@@ -106,3 +106,162 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ─── Admin toast slide-in / slide-out ─── */
+@keyframes admin-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes admin-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+.admin-toast-enter {
+  animation: admin-toast-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.admin-toast-exit {
+  animation: admin-toast-out 0.32s ease both;
+}
+
+/* ─── Admin page mount fade ─── */
+@keyframes admin-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-page-in {
+  animation: admin-page-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Stat-card pulse on first paint ─── */
+@keyframes stat-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stat-pop {
+  animation: stat-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Sparkline path draw-in ─── */
+@keyframes admin-spark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.admin-spark-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: admin-spark-draw 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+/* ─── Pipeline-bar segment fill ─── */
+@keyframes admin-bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.admin-bar-fill {
+  animation: admin-bar-fill 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left center;
+}
+
+/* ─── Activity feed row stagger ─── */
+@keyframes admin-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-row-in {
+  animation: admin-row-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Command palette open/close ─── */
+@keyframes admin-cmd-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes admin-cmd-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.admin-cmd-enter {
+  animation: admin-cmd-in 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.admin-cmd-backdrop-enter {
+  animation: admin-cmd-backdrop 0.2s ease-out both;
+}
+
+/* ─── Heatmap cell fade-in ─── */
+@keyframes admin-heatmap-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.admin-heatmap-cell {
+  animation: admin-heatmap-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Subtle sheen sweep for hero up-next card ─── */
+@keyframes admin-sheen {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.admin-sheen {
+  animation: admin-sheen 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s 1;
+}

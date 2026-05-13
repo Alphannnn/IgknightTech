@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MouseEvent as ReactMouseEvent, CSSProperties } from "react";
 import {
   Code2,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 
 type Service = {
+  id: string;
   icon: typeof Code2;
   title: string;
   desc: string;
@@ -21,6 +23,7 @@ type Service = {
 
 const SERVICES: Service[] = [
   {
+    id: "custom-software",
     icon: Code2,
     title: "Custom Software",
     desc: "Bespoke products engineered around your exact business workflow — from MVP to enterprise scale.",
@@ -28,6 +31,7 @@ const SERVICES: Service[] = [
     accent: "#7BB6FF",
   },
   {
+    id: "web-development",
     icon: Globe,
     title: "Web Development",
     desc: "Modern, performant web experiences built on a battle-tested stack.",
@@ -35,6 +39,7 @@ const SERVICES: Service[] = [
     accent: "#A78BFA",
   },
   {
+    id: "mobile-apps",
     icon: Smartphone,
     title: "Mobile Apps",
     desc: "Native iOS, Android, and cross-platform builds that feel right at home on every device.",
@@ -42,6 +47,7 @@ const SERVICES: Service[] = [
     accent: "#34D399",
   },
   {
+    id: "ai-data",
     icon: Sparkles,
     title: "AI & Data",
     desc: "From data pipelines to LLM-powered features — practical intelligence, shipped to production.",
@@ -49,6 +55,7 @@ const SERVICES: Service[] = [
     accent: "#FCD34D",
   },
   {
+    id: "cloud-devops",
     icon: Cloud,
     title: "Cloud & DevOps",
     desc: "Resilient infrastructure, automated pipelines, and zero-downtime deployments — at any scale.",
@@ -56,6 +63,7 @@ const SERVICES: Service[] = [
     accent: "#60A5FA",
   },
   {
+    id: "product-design",
     icon: Palette,
     title: "Product Design",
     desc: "Human-centered UI/UX backed by research, prototyping, and iteration with your users.",
@@ -68,7 +76,7 @@ const SERVICES: Service[] = [
 const WIDE_INDICES = new Set([0, 3, 4]);
 
 export default function Services() {
-  const trackMouse = (e: ReactMouseEvent<HTMLDivElement>) => {
+  const trackMouse = (e: ReactMouseEvent<HTMLElement>) => {
     const target = e.currentTarget;
     const rect = target.getBoundingClientRect();
     target.style.setProperty("--mx", `${e.clientX - rect.left}px`);
@@ -138,10 +146,11 @@ export default function Services() {
             const wide = WIDE_INDICES.has(i);
 
             return (
-              <article
+              <Link
                 key={s.title}
+                href={`/services/${s.id}`}
                 onMouseMove={trackMouse}
-                className={`group relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-6 sm:p-7 md:p-8 hover:border-white/25 transition-all duration-500 overflow-hidden cursor-default ${
+                className={`group relative block rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-6 sm:p-7 md:p-8 hover:border-white/25 hover:-translate-y-0.5 transition-all duration-500 overflow-hidden ${
                   wide ? "lg:col-span-2" : "lg:col-span-1"
                 }`}
                 style={{ "--accent": s.accent } as CSSProperties}
@@ -211,7 +220,7 @@ export default function Services() {
                   </div>
 
                 </div>
-              </article>
+              </Link>
             );
           })}
         </div>
@@ -219,15 +228,15 @@ export default function Services() {
         {/* Footer CTA */}
         <div className="mt-14 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
           <p className="text-blue-100/60 text-sm sm:text-base">
-            Have a different challenge in mind?
+            Want to dive deeper into any of these?
           </p>
-          <a
-            href="#"
+          <Link
+            href="/services"
             className="group inline-flex items-center gap-2 text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-lg border border-white/15 hover:border-white/35 hover:bg-white/[0.05] transition-all duration-300"
           >
-            Let&apos;s talk
+            See all services
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
+          </Link>
         </div>
 
       </div>
