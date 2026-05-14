@@ -95,7 +95,7 @@ export default function AdminShell({
 
       {/* ─────────── Sidebar ─────────── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[260px] bg-[#0A1635] border-r border-white/[0.06] flex flex-col transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-[260px] bg-[#0F2A6F] border-r border-white/[0.06] flex flex-col transition-transform duration-300 lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -110,9 +110,9 @@ export default function AdminShell({
               aria-hidden="true"
               className="relative w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm overflow-hidden transition-transform duration-300 group-hover:scale-105"
               style={{
-                background: "linear-gradient(135deg, #7BB6FF, #4f9ef8 60%, #3a8ef0)",
+                background: "linear-gradient(135deg, #7BB6FF, #2783ED 60%, #1A6FD9)",
                 boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px -4px rgba(79,158,248,0.6)",
+                  "0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px -4px rgba(39,131,237,0.6)",
               }}
             >
               <span className="relative">I</span>
@@ -201,7 +201,7 @@ export default function AdminShell({
                             aria-hidden="true"
                             className={`relative inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-bold tabular-nums transition-all ${
                               active
-                                ? "bg-[#7BB6FF] text-[#0A1635]"
+                                ? "bg-[#7BB6FF] text-[#0F2A6F]"
                                 : "bg-white/[0.08] text-blue-100/80"
                             }`}
                           >

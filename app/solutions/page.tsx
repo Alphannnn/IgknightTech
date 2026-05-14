@@ -18,16 +18,22 @@ import {
 export default function SolutionsPage() {
   const [activeId, setActiveId] = useState<string>(INDUSTRIES[0].id);
 
-  // Honor hash on initial load (e.g., navbar links: /solutions#fintech-banking).
-  // setState in an effect is intentional here — we're syncing from window.location,
-  // which is an external system unavailable during SSR.
+  // Sync activeId with the URL hash — both on initial load AND on subsequent
+  // hashchange (so clicking a navbar dropdown item like /solutions#fintech-banking
+  // while already on /solutions actually switches the tab).
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hash = window.location.hash.slice(1);
-    if (hash && INDUSTRIES.find((i) => i.id === hash)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setActiveId(hash);
-    }
+
+    const applyHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash && INDUSTRIES.find((i) => i.id === hash)) {
+        setActiveId(hash);
+      }
+    };
+
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
   }, []);
 
   const setActive = (id: string) => {
@@ -427,7 +433,7 @@ function FinalCTA() {
         <div
           className="relative rounded-3xl overflow-hidden p-8 sm:p-12 md:p-14 text-center"
           style={{
-            background: "linear-gradient(135deg, #0F1F45 0%, #0C1C3D 100%)",
+            background: "linear-gradient(135deg, #1B49A8 0%, #143A8E 100%)",
           }}
         >
           <div
@@ -442,7 +448,7 @@ function FinalCTA() {
             Don&apos;t see your{" "}
             <span
               style={{
-                backgroundImage: "linear-gradient(90deg, #7BB6FF, #BFD9FF, #7BB6FF)",
+                backgroundImage: "linear-gradient(90deg, #7BB6FF, #CDE2FE, #7BB6FF)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -459,7 +465,7 @@ function FinalCTA() {
           <div className="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/schedule"
-              className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.4)] hover:shadow-[0_0_32px_rgba(79,158,248,0.6)]"
+              className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.4)] hover:shadow-[0_0_32px_rgba(39,131,237,0.6)]"
             >
               Schedule a call
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

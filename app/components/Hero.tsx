@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import HeroVisual from "./HeroVisual";
 
 interface WaveDef {
   p0x: number; p0y: number;
@@ -197,7 +199,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative w-full min-h-[100svh] py-20 sm:py-24 md:py-28 lg:py-0 lg:h-screen lg:min-h-[640px] bg-[#0C1C3D] overflow-hidden flex items-center">
+    <section className="relative w-full min-h-[100svh] py-20 sm:py-24 md:py-28 lg:py-0 lg:h-screen lg:min-h-[640px] bg-[#143A8E] overflow-hidden flex items-center">
 
       {/* Animated canvas — full bleed */}
       <canvas
@@ -258,10 +260,18 @@ export default function HeroSection() {
 
         {/* Left — Text */}
         <div className="flex flex-col gap-4 sm:gap-5 text-center lg:text-left items-center lg:items-start lg:-ml-6">
-          {/* Small eyebrow accent */}
-          <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-blue-300/80 uppercase">
-            <span className="h-px w-6 sm:w-8 bg-blue-300/50" />
-            Software Studio
+          {/* Editorial meta line — replaces line+text eyebrow */}
+          <div className="flex items-center gap-3 font-mono">
+            <span className="text-[10px] sm:text-[11px] tracking-[0.32em] text-[#7BB6FF]">
+              00 / SOFTWARE STUDIO
+            </span>
+            <span
+              aria-hidden="true"
+              className="h-px w-10 bg-gradient-to-r from-[#7BB6FF]/40 to-transparent"
+            />
+            <span className="text-[10px] tracking-[0.18em] text-white/35 uppercase hidden sm:inline">
+              Est. 2024
+            </span>
           </div>
 
           <h1 className="font-semibold tracking-tight leading-[1.02]">
@@ -279,7 +289,7 @@ export default function HeroSection() {
                 aria-live="polite"
                 style={{
                   backgroundImage:
-                    "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                    "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   letterSpacing: "-0.01em",
@@ -299,203 +309,101 @@ export default function HeroSection() {
             plan, analyze and manage everyday tasks.
           </p>
 
-          <div className="mt-2 sm:mt-3">
-            <Link
-              href="/schedule"
-              className="group inline-flex items-center gap-2.5 bg-[#4a8fd8] hover:bg-[#3a7fcb] text-white text-sm sm:text-[15px] font-bold px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_32px_rgba(74,144,217,0.5)] hover:shadow-[0_0_48px_rgba(74,144,217,0.75)]"
-            >
-              Start a project
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
+          {/* Premium CTA cluster — magnetic on cursor proximity */}
+          <div className="mt-2 sm:mt-3 flex flex-col sm:flex-row items-center lg:items-start gap-3 sm:gap-4">
+            <Magnetic strength={0.35}>
+              <Link
+                href="/schedule"
+                className="group relative inline-flex items-center gap-2.5 bg-white text-slate-900 text-sm sm:text-[15px] font-medium px-6 sm:px-7 py-3 sm:py-3.5 rounded-[8px] transition-all duration-300 overflow-hidden tracking-tight"
+                style={{
+                  boxShadow:
+                    "0 1px 0 rgba(255,255,255,0.5) inset, 0 0 0 1px rgba(255,255,255,0.06), 0 14px 30px -12px rgba(123,182,255,0.45)",
+                }}
+              >
+                {/* Hover sheen */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(120deg, transparent 30%, rgba(123,182,255,0.18) 50%, transparent 70%)",
+                  }}
+                />
+                <span className="relative">Start a project</span>
+                <ArrowRight
+                  className="relative w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
+                  strokeWidth={2}
+                />
+              </Link>
+            </Magnetic>
+
+            <Magnetic strength={0.25}>
+              <Link
+                href="/work"
+                className="group inline-flex items-center gap-2.5 text-white/85 hover:text-white text-sm sm:text-[15px] font-medium px-2 sm:px-3 py-3 sm:py-3.5 tracking-tight transition-colors"
+              >
+                <span className="relative">
+                  See our work
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 right-0 -bottom-0.5 h-px bg-white/60 origin-left scale-x-100 group-hover:scale-x-0 transition-transform duration-300"
+                  />
+                </span>
+                <ArrowRight
+                  className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
+                  strokeWidth={1.7}
+                />
+              </Link>
+            </Magnetic>
           </div>
         </div>
 
-        {/* Right — Premium product composition */}
+        {/* Right — Editorial scene canvas (NEXUS / PRISM / TRAJECTORY / ORBIT) */}
         <div className="relative flex justify-center lg:justify-end">
-          <div className="relative w-full max-w-[600px] aspect-[4/3]">
-
-            {/* Ambient glow behind the stack */}
-            <div
-              aria-hidden="true"
-              className="absolute -inset-12 rounded-[3rem] blur-3xl opacity-70 pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(60% 55% at 60% 40%, rgba(123,182,255,0.22), transparent 70%)",
-              }}
-            />
-
-            {/* Main dashboard panel */}
-            <div className="absolute inset-0 rounded-2xl border border-white/[0.09] bg-gradient-to-br from-white/[0.07] via-white/[0.035] to-white/[0.01] backdrop-blur-xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden">
-
-              {/* Top edge highlight */}
-              <div
-                aria-hidden="true"
-                className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent"
-              />
-
-              {/* Window chrome */}
-              <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/[0.07]">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#ff6058]/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#ffbe2e]/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#28c941]/80" />
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono text-white/35 tracking-tight">
-                  igknight.tech / workspace
-                </span>
-                <span className="w-10" />
-              </div>
-
-              {/* Body */}
-              <div className="p-4 sm:p-5 md:p-6 flex flex-col gap-4 sm:gap-5">
-
-                {/* Header row */}
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.22em] text-blue-200/55">
-                      Production
-                    </div>
-                    <div className="mt-1 text-white text-sm sm:text-base font-semibold tracking-tight">
-                      Live deployments
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-300 bg-emerald-400/[0.09] border border-emerald-400/25 px-2.5 py-1 rounded-full">
-                    <span className="relative flex w-1.5 h-1.5">
-                      <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
-                      <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    </span>
-                    Operational
-                  </span>
-                </div>
-
-                {/* KPI tiles */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
-                  {[
-                    { label: "Uptime", value: "99.99", unit: "%" },
-                    { label: "Deploys", value: "142", unit: "/wk" },
-                    { label: "p95",     value: "128", unit: "ms" },
-                  ].map((kpi) => (
-                    <div
-                      key={kpi.label}
-                      className="relative rounded-lg border border-white/[0.07] bg-white/[0.02] p-2.5 sm:p-3 overflow-hidden"
-                    >
-                      <div
-                        aria-hidden="true"
-                        className="absolute top-0 left-3 right-3 h-px bg-white/10"
-                      />
-                      <div className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-blue-200/45">
-                        {kpi.label}
-                      </div>
-                      <div className="mt-1 text-white text-base sm:text-lg font-bold tracking-tight">
-                        {kpi.value}
-                        <span className="text-[11px] sm:text-xs text-blue-200/50 font-medium ml-0.5">
-                          {kpi.unit}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Sparkline */}
-                <div className="relative h-16 sm:h-20 rounded-lg border border-white/[0.06] bg-gradient-to-b from-white/[0.025] to-transparent overflow-hidden">
-                  <svg
-                    viewBox="0 0 400 100"
-                    preserveAspectRatio="none"
-                    className="w-full h-full"
-                    aria-hidden="true"
-                  >
-                    <defs>
-                      <linearGradient id="hero-spark-fill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#7BB6FF" stopOpacity="0.32" />
-                        <stop offset="100%" stopColor="#7BB6FF" stopOpacity="0" />
-                      </linearGradient>
-                      <linearGradient id="hero-spark-line" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%"   stopColor="#7BB6FF" />
-                        <stop offset="100%" stopColor="#BFD9FF" />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M0,78 C40,72 65,60 100,56 C140,50 165,72 200,62 C240,50 270,30 320,26 C360,22 380,18 400,14 L400,100 L0,100 Z"
-                      fill="url(#hero-spark-fill)"
-                    />
-                    <path
-                      d="M0,78 C40,72 65,60 100,56 C140,50 165,72 200,62 C240,50 270,30 320,26 C360,22 380,18 400,14"
-                      fill="none"
-                      stroke="url(#hero-spark-line)"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                    {/* Endpoint dot */}
-                    <circle cx="400" cy="14" r="3" fill="#BFD9FF" />
-                  </svg>
-                </div>
-
-                {/* Service rows */}
-                <div className="flex flex-col gap-1.5 sm:gap-2">
-                  {[
-                    { name: "stratify-api",  status: "shipped",   dot: "#7BB6FF" },
-                    { name: "vyra-mobile",   status: "deploying", dot: "#FCD34D" },
-                  ].map((row) => (
-                    <div
-                      key={row.name}
-                      className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.018] px-3 py-1.5 sm:py-2"
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span
-                          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                          style={{
-                            background: row.dot,
-                            boxShadow: `0 0 8px ${row.dot}90`,
-                          }}
-                        />
-                        <span className="text-[11px] sm:text-[12px] font-mono text-white/80 truncate">
-                          {row.name}
-                        </span>
-                      </div>
-                      <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-200/55">
-                        {row.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Floating deploy card */}
-            <div className="absolute -top-5 -right-3 sm:-top-7 sm:-right-6 w-40 sm:w-48 rounded-xl border border-white/[0.14] bg-gradient-to-br from-[#1a2c5c]/95 to-[#0f1f45]/95 backdrop-blur-xl shadow-[0_18px_50px_-10px_rgba(0,0,0,0.7)] p-3 sm:p-3.5">
-              <div className="absolute top-0 inset-x-3 h-px bg-white/15" />
-              <div className="flex items-center justify-between">
-                <div className="text-[8.5px] sm:text-[9px] font-bold uppercase tracking-[0.22em] text-blue-200/55">
-                  Deploy
-                </div>
-                <span className="relative flex w-1.5 h-1.5">
-                  <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
-                  <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                </span>
-              </div>
-              <div className="mt-1.5 sm:mt-2 text-white text-xs sm:text-sm font-semibold tracking-tight">
-                main → prod
-              </div>
-              <div className="mt-0.5 text-[10px] sm:text-[11px] text-emerald-300/85 font-mono">
-                +18 commits · 42s
-              </div>
-            </div>
-
-            {/* Floating file chip */}
-            <div className="absolute -bottom-3 -left-2 sm:-bottom-4 sm:-left-4 inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-[#0f1f45]/90 backdrop-blur-xl px-3 sm:px-3.5 py-1.5 sm:py-2 shadow-[0_10px_30px_-6px_rgba(0,0,0,0.6)]">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "#A78BFA", boxShadow: "0 0 8px #A78BFA90" }}
-              />
-              <span className="text-[10px] sm:text-[11px] font-mono text-white/85">
-                ai-pipeline.ts
-              </span>
-            </div>
-
-          </div>
+          <HeroVisual activeHeadingIndex={headingIndex} />
         </div>
 
       </div>
     </section>
+  );
+}
+
+/* ── Magnetic wrapper — the child shifts toward the cursor on proximity ── */
+function Magnetic({
+  children,
+  strength = 0.3,
+}: {
+  children: ReactNode;
+  strength?: number;
+}) {
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const onMove = (e: React.MouseEvent<HTMLSpanElement>) => {
+    const node = wrapRef.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) * strength;
+    const dy = (e.clientY - cy) * strength;
+    setOffset({ x: dx, y: dy });
+  };
+
+  const onLeave = () => setOffset({ x: 0, y: 0 });
+
+  return (
+    <span
+      ref={wrapRef}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="inline-block"
+      style={{
+        transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
+        transition: "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+    >
+      {children}
+    </span>
   );
 }

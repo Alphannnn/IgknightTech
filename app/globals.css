@@ -107,6 +107,170 @@ body {
   }
 }
 
+/* ─── Scroll reveal utilities ───
+   Pair with the useReveal hook: apply .reveal initially, toggle .reveal-in when visible. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-up   { transform: translateY(22px); }
+.reveal-up.reveal-in   { transform: translateY(0); }
+.reveal-left  { transform: translateX(-26px); }
+.reveal-left.reveal-in  { transform: translateX(0); }
+.reveal-right { transform: translateX(26px); }
+.reveal-right.reveal-in { transform: translateX(0); }
+.reveal-scale { transform: scale(0.96); }
+.reveal-scale.reveal-in { transform: scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-up,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── Marquee row reveal (used in TrustedBy logo strips) ─── */
+@keyframes line-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ─── Hero scene transitions ───
+   Each scene "lives" on one side. On enter it slides from that side; on exit
+   it returns to it. Combined with rotation + drift for organic, premium feel. */
+@keyframes hero-slide-in-left {
+  0% {
+    transform: translate3d(-72%, -14px, 0) rotate(-4deg) scale(0.94);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  60% { filter: blur(0); }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes hero-slide-in-right {
+  0% {
+    transform: translate3d(72%, -14px, 0) rotate(4deg) scale(0.94);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  60% { filter: blur(0); }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes hero-slide-out-left {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  40% { filter: blur(0); }
+  100% {
+    transform: translate3d(-78%, 14px, 0) rotate(-5deg) scale(0.92);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+@keyframes hero-slide-out-right {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  40% { filter: blur(0); }
+  100% {
+    transform: translate3d(78%, 14px, 0) rotate(5deg) scale(0.92);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+/* ─── Slow ambient drift (subtle floating for scene container) ─── */
+@keyframes scene-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -8px, 0); }
+}
+
+/* ─── Admin chart animations ─── */
+@keyframes chart-line-draw {
+  from { stroke-dashoffset: var(--chart-dash-length, 1000); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes chart-area-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes chart-dot-pop {
+  0%   { opacity: 0; transform: scale(0); }
+  60%  { transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes chart-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes chart-arc-grow {
+  from { stroke-dasharray: 0 9999; }
+  /* `to` set inline via style */
+}
+
+@keyframes chart-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes admin-card-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -3px, 0); }
+}
+
+@keyframes admin-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.8; }
+}
+
+@keyframes admin-blob-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(30px, -20px) scale(1.08); }
+  66%      { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+@keyframes admin-blob-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(-40px, 25px) scale(1.05); }
+  66%      { transform: translate(25px, -30px) scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene-enter,
+  .hero-scene-exit {
+    animation: none !important;
+  }
+}
+
 /* ─── Admin toast slide-in / slide-out ─── */
 @keyframes admin-toast-in {
   from {

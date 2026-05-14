@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { db } from "./db";
 import { requireAdmin } from "./auth";
+import { getCurrentUser } from "./user-auth";
 
 export type BookMeetingInput = {
   name: string;
-  email: string;
   company?: string | null;
   message?: string | null;
   meetingType: string;
@@ -35,13 +35,18 @@ const VALID_TYPES = new Set([
   "general",
 ]);
 
-/** Public: called from /schedule form. No auth required. */
+/** Public: called from /schedule form. Requires a signed-in user. */
 export async function bookMeeting(
   input: BookMeetingInput
 ): Promise<BookMeetingResult> {
-  // Validate
-  const name = String(input.name ?? "").trim();
-  const email = String(input.email ?? "").trim().toLowerCase();
+  const user = await getCurrentUser();
+  if (!user) {
+    return { ok: false, error: "Please sign in to book a meeting." };
+  }
+
+  // Name + email are bound to the session — never trust client input for these.
+  const name = String(input.name ?? user.name ?? "").trim() || (user.name ?? "");
+  const email = user.email.toLowerCase();
   const company = input.company ? String(input.company).trim() : null;
   const message = input.message ? String(input.message).trim() : null;
   const meetingType = String(input.meetingType ?? "").trim();

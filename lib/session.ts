@@ -11,13 +11,24 @@
 
 const ALGORITHM = { name: "HMAC", hash: "SHA-256" } as const;
 const TOKEN_TTL_SECONDS = 60 * 60 * 12; // 12 hours
+const USER_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
 export const SESSION_COOKIE_NAME = "admin_session";
+export const USER_SESSION_COOKIE_NAME = "user_session";
 
-type SessionPayload = {
+type AdminPayload = {
   sub: "admin";
   iat: number;
   exp: number;
 };
+
+type UserPayload = {
+  sub: "user";
+  uid: string;
+  iat: number;
+  exp: number;
+};
+
+type SessionPayload = AdminPayload;
 
 function getSecret(): string {
   const s = process.env.SESSION_SECRET;
@@ -76,6 +87,40 @@ export async function createSessionToken(): Promise<{ token: string; maxAge: num
 export async function verifySessionToken(
   token: string | undefined | null
 ): Promise<SessionPayload | null> {
+  const payload = await verifyAnyToken(token);
+  if (!payload || payload.sub !== "admin") return null;
+  return payload;
+}
+
+export async function createUserSessionToken(
+  userId: string,
+): Promise<{ token: string; maxAge: number }> {
+  const now = Math.floor(Date.now() / 1000);
+  const payload: UserPayload = {
+    sub: "user",
+    uid: userId,
+    iat: now,
+    exp: now + USER_TOKEN_TTL_SECONDS,
+  };
+  const payloadBytes = new TextEncoder().encode(JSON.stringify(payload));
+  const key = await importKey(getSecret());
+  const sig = await sign(payloadBytes, key);
+
+  const token = `${toBase64Url(payloadBytes)}.${toBase64Url(sig)}`;
+  return { token, maxAge: USER_TOKEN_TTL_SECONDS };
+}
+
+export async function verifyUserSessionToken(
+  token: string | undefined | null,
+): Promise<UserPayload | null> {
+  const payload = await verifyAnyToken(token);
+  if (!payload || payload.sub !== "user") return null;
+  return payload;
+}
+
+async function verifyAnyToken(
+  token: string | undefined | null,
+): Promise<AdminPayload | UserPayload | null> {
   if (!token) return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
@@ -89,12 +134,13 @@ export async function verifySessionToken(
       ALGORITHM,
       key,
       sigBytes as BufferSource,
-      payloadBytes as BufferSource
+      payloadBytes as BufferSource,
     );
     if (!valid) return null;
 
-    const payload = JSON.parse(new TextDecoder().decode(payloadBytes)) as SessionPayload;
-    if (payload.sub !== "admin") return null;
+    const payload = JSON.parse(new TextDecoder().decode(payloadBytes)) as
+      | AdminPayload
+      | UserPayload;
     if (typeof payload.exp !== "number" || payload.exp <= Math.floor(Date.now() / 1000)) {
       return null;
     }

@@ -379,7 +379,7 @@ const ENGAGEMENT_MODELS: EngagementModel[] = [
 
 function EngagementModels() {
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24 md:py-28">
+    <section className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24 md:py-28">
 
       {/* Dot grid */}
       <div
@@ -407,7 +407,7 @@ function EngagementModels() {
             <span
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                  "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -601,7 +601,7 @@ function FinalCTA() {
         <div
           className="relative rounded-3xl overflow-hidden p-8 sm:p-12 md:p-16 text-center"
           style={{
-            background: "linear-gradient(135deg, #0F1F45 0%, #0C1C3D 100%)",
+            background: "linear-gradient(135deg, #1B49A8 0%, #143A8E 100%)",
           }}
         >
           <div
@@ -623,7 +623,7 @@ function FinalCTA() {
             <span
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, #7BB6FF, #BFD9FF, #7BB6FF)",
+                  "linear-gradient(90deg, #7BB6FF, #CDE2FE, #7BB6FF)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -641,7 +641,7 @@ function FinalCTA() {
           <div className="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/schedule"
-              className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.4)] hover:shadow-[0_0_32px_rgba(79,158,248,0.6)]"
+              className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.4)] hover:shadow-[0_0_32px_rgba(39,131,237,0.6)]"
             >
               Schedule a call
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

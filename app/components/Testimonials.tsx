@@ -1,14 +1,12 @@
 "use client";
 
-import { Quote, Star } from "lucide-react";
+import { useReveal } from "@/lib/use-reveal";
 
 type Testimonial = {
   quote: string;
   name: string;
   role: string;
   company: string;
-  from: string;
-  to: string;
 };
 
 const COLUMN_1: Testimonial[] = [
@@ -18,8 +16,6 @@ const COLUMN_1: Testimonial[] = [
     name: "Sarah Chen",
     role: "CTO",
     company: "Stratify",
-    from: "#7BB6FF",
-    to: "#3B82F6",
   },
   {
     quote:
@@ -27,8 +23,6 @@ const COLUMN_1: Testimonial[] = [
     name: "Marcus Holloway",
     role: "Head of Product",
     company: "Northwind Labs",
-    from: "#A78BFA",
-    to: "#7C3AED",
   },
   {
     quote:
@@ -36,8 +30,6 @@ const COLUMN_1: Testimonial[] = [
     name: "Priya Kothari",
     role: "VP Engineering",
     company: "Helio Health",
-    from: "#34D399",
-    to: "#059669",
   },
   {
     quote:
@@ -45,8 +37,6 @@ const COLUMN_1: Testimonial[] = [
     name: "James Whitfield",
     role: "Founder",
     company: "Vyra",
-    from: "#FCD34D",
-    to: "#D97706",
   },
 ];
 
@@ -57,8 +47,6 @@ const COLUMN_2: Testimonial[] = [
     name: "Elena Rodriguez",
     role: "COO",
     company: "Marlowe & Co.",
-    from: "#F472B6",
-    to: "#DB2777",
   },
   {
     quote:
@@ -66,8 +54,6 @@ const COLUMN_2: Testimonial[] = [
     name: "David Park",
     role: "Director of Data",
     company: "Kepler AI",
-    from: "#60A5FA",
-    to: "#2563EB",
   },
   {
     quote:
@@ -75,8 +61,6 @@ const COLUMN_2: Testimonial[] = [
     name: "Anna Lindqvist",
     role: "Product Lead",
     company: "Nordwell",
-    from: "#5EEAD4",
-    to: "#0D9488",
   },
   {
     quote:
@@ -84,8 +68,6 @@ const COLUMN_2: Testimonial[] = [
     name: "Tomás Reyes",
     role: "CEO",
     company: "Brightline",
-    from: "#FB923C",
-    to: "#C2410C",
   },
 ];
 
@@ -96,8 +78,6 @@ const COLUMN_3: Testimonial[] = [
     name: "Rachel Okafor",
     role: "VP Operations",
     company: "Atlas Freight",
-    from: "#818CF8",
-    to: "#4F46E5",
   },
   {
     quote:
@@ -105,8 +85,6 @@ const COLUMN_3: Testimonial[] = [
     name: "Benjamin Hayes",
     role: "Founder",
     company: "Ledger Bridge",
-    from: "#67E8F9",
-    to: "#0891B2",
   },
   {
     quote:
@@ -114,8 +92,6 @@ const COLUMN_3: Testimonial[] = [
     name: "Maya Goldberg",
     role: "Head of Brand",
     company: "Petal & Pine",
-    from: "#FCA5A5",
-    to: "#DC2626",
   },
   {
     quote:
@@ -123,46 +99,53 @@ const COLUMN_3: Testimonial[] = [
     name: "Hiroshi Tanaka",
     role: "Principal Engineer",
     company: "Aurora Networks",
-    from: "#86EFAC",
-    to: "#16A34A",
   },
 ];
 
 export default function Testimonials() {
+  const [headerRef, headerVisible] = useReveal<HTMLElement>();
+
   return (
-    <section id="testimonials" className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32 scroll-mt-20">
+    <section
+      id="testimonials"
+      className="relative w-full bg-white overflow-hidden py-24 sm:py-28 md:py-32 lg:py-36 scroll-mt-20"
+    >
 
-      <div className="relative z-10 w-full max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20">
+      <div className="relative z-10 w-full max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:px-12">
 
-        {/* Heading */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12 sm:mb-14 lg:mb-16">
-
-          <div className="flex items-center gap-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-400 uppercase">
-            <span className="h-px w-6 sm:w-8 bg-slate-300" />
-            Client Stories
-            <span className="h-px w-6 sm:w-8 bg-slate-300" />
+        {/* ── Editorial header */}
+        <header
+          ref={headerRef}
+          className={`reveal reveal-up flex flex-col gap-6 sm:gap-7 max-w-3xl mb-14 sm:mb-16 lg:mb-20 ${headerVisible ? "reveal-in" : ""}`}
+        >
+          <div className="flex items-center gap-3">
+            <span
+              aria-hidden="true"
+              className="font-mono text-[10px] sm:text-[11px] tracking-[0.32em] text-[#2783ED]"
+            >
+              06 / CLIENT STORIES
+            </span>
+            <span
+              aria-hidden="true"
+              className="h-px flex-1 max-w-[120px] bg-gradient-to-r from-slate-300 to-transparent"
+            />
           </div>
 
-          <h2 className="mt-5 font-extrabold tracking-tight text-slate-900 text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] leading-[1.05]">
-            What our{" "}
-            <span className="relative inline-block">
-              <span
-                aria-hidden="true"
-                className="absolute left-0 right-0 bottom-1 sm:bottom-2 h-2.5 sm:h-3 md:h-[14px] bg-amber-300/85 rounded-[3px]"
-              />
-              <span className="relative">clients</span>
-            </span>{" "}
-            say
+          <h2 className="text-slate-900 tracking-[-0.02em] leading-[0.98] text-[2.4rem] sm:text-[3.2rem] md:text-[3.8rem] lg:text-[4.2rem]">
+            <span className="font-light text-slate-400">What our</span>
+            <br />
+            <span className="font-semibold">clients say.</span>
           </h2>
 
-          <p className="mt-5 text-slate-500 text-base sm:text-lg max-w-2xl leading-relaxed">
-            Real teams. Real outcomes. Here&apos;s what they say about working with us — in their own words.
+          <p className="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl">
+            Real teams. Real outcomes. Here&apos;s what they say about working
+            with us — in their own words.
           </p>
-        </div>
+        </header>
 
         {/* Marquee columns */}
         <div
-          className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 h-[560px] sm:h-[600px] md:h-[640px] overflow-hidden"
+          className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 h-[580px] sm:h-[640px] md:h-[700px] overflow-hidden"
           style={{
             maskImage:
               "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
@@ -221,7 +204,7 @@ function Column({
   );
 }
 
-/* ── Single testimonial card ── */
+/* ── Single testimonial card — editorial, no gradient avatar, no quote glyph */
 function TestimonialCard({ testimonial: t }: { testimonial: Testimonial }) {
   const initials = t.name
     .split(" ")
@@ -231,49 +214,39 @@ function TestimonialCard({ testimonial: t }: { testimonial: Testimonial }) {
     .toUpperCase();
 
   return (
-    <article className="group/card relative rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 hover:shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 cursor-default">
+    <article className="group/card relative bg-white p-6 sm:p-7 border border-slate-200/80 rounded-[12px] hover:border-slate-300 transition-colors duration-300 cursor-default overflow-hidden">
 
-      {/* Quote glyph (decorative) */}
-      <div className="absolute top-5 right-5 opacity-30 group-hover/card:opacity-100 transition-opacity duration-500">
-        <Quote
-          className="w-6 h-6 text-amber-300"
-          strokeWidth={2}
-          fill="currentColor"
-        />
-      </div>
+      {/* Top light-line sheen on hover */}
+      <span
+        aria-hidden="true"
+        className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#2783ED]/60 to-transparent scale-x-0 group-hover/card:scale-x-100 origin-left transition-transform duration-500"
+      />
 
-      {/* Rating */}
-      <div className="flex gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            className="w-3.5 h-3.5 fill-amber-400 text-amber-400"
-            strokeWidth={1.5}
-          />
-        ))}
-      </div>
+      {/* Decorative quote glyph — used as typographic mark, not as icon */}
+      <span
+        aria-hidden="true"
+        className="absolute -top-2 right-5 font-serif text-[5rem] leading-none text-slate-100 select-none pointer-events-none"
+      >
+        &ldquo;
+      </span>
 
       {/* Quote */}
-      <p className="mt-4 text-slate-700 text-[14px] sm:text-[15px] leading-relaxed">
-        &ldquo;{t.quote}&rdquo;
+      <p className="relative text-slate-800 text-[15px] sm:text-[15.5px] leading-[1.6] font-normal">
+        {t.quote}
       </p>
 
-      {/* Author */}
-      <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-full text-white font-bold flex items-center justify-center text-[13px] tracking-tight ring-2 ring-white shadow-[0_2px_8px_rgba(15,23,42,0.12)]"
-          style={{
-            background: `linear-gradient(135deg, ${t.from}, ${t.to})`,
-          }}
-        >
+      {/* Hairline divider */}
+      <div className="mt-6 pt-5 border-t border-slate-100 flex items-center gap-3.5">
+        {/* Monogram in hairline ring — no color, premium restraint */}
+        <div className="relative w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-700 font-medium text-[12px] tracking-tight bg-slate-50/60">
           {initials}
         </div>
-        <div className="min-w-0">
-          <div className="text-slate-900 text-sm font-bold truncate">
+        <div className="min-w-0 flex-1">
+          <div className="text-slate-900 text-sm font-medium truncate tracking-tight">
             {t.name}
           </div>
-          <div className="text-slate-500 text-xs mt-0.5 truncate">
-            {t.role} · <span className="font-medium">{t.company}</span>
+          <div className="mt-0.5 font-mono text-[10px] tracking-[0.16em] text-slate-400 uppercase truncate">
+            {t.role} · {t.company}
           </div>
         </div>
       </div>

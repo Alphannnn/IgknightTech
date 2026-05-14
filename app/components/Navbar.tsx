@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import AccountPanel from "./AccountPanel";
 import {
   ChevronDown,
   X,
@@ -16,10 +17,12 @@ import {
   Sparkles,
   Cloud,
   Palette,
-  // Work / Case studies
+  // Work / Case studies (real projects)
+  Send,
+  TrendingUp,
+  Calendar,
+  CreditCard,
   Layers,
-  BarChart3,
-  Network,
   // Solutions
   Rocket,
   Wallet,
@@ -74,12 +77,12 @@ const navLinks: NavLink[] = [
     footerCtaHref: "/schedule",
     viewAllHref: "/work",
     items: [
-      { title: "Stratify",        desc: "Backend rebuild that 4×'d throughput.",            icon: Layers,     accent: "#7BB6FF", tag: "SaaS",          href: "/work#stratify" },
-      { title: "Vyra",            desc: "Mobile rebuild — 3.6 to 4.7 stars.",                icon: Smartphone, accent: "#FCD34D", tag: "Fintech",       href: "/work#vyra" },
-      { title: "Helio Health",    desc: "HIPAA-grade patient portal at scale.",              icon: HeartPulse, accent: "#34D399", tag: "Healthcare",    href: "/work#helio" },
-      { title: "Brightline",      desc: "Dashboard redesign that lifted retention 27pts.",   icon: BarChart3,  accent: "#FB923C", tag: "SaaS",          href: "/work#brightline" },
-      { title: "Kepler AI",       desc: "ML pipeline shipped to production in 30 days.",     icon: Sparkles,   accent: "#A78BFA", tag: "AI / Data",     href: "/work#kepler" },
-      { title: "Aurora Networks", desc: "Zero-downtime migration for 4M daily users.",       icon: Network,    accent: "#67E8F9", tag: "Infrastructure", href: "/work#aurora" },
+      { title: "Zentap",        desc: "Marketing automation that streamlines digital workflows.", icon: Send,        accent: "#8B5CF6", tag: "Marketing",   href: "/work#zentap" },
+      { title: "Traded",        desc: "Trading platform with seamless investor UX.",              icon: TrendingUp,  accent: "#10B981", tag: "Fintech",     href: "/work#traded" },
+      { title: "Go Outfitter",  desc: "Outdoor marketplace built to convert.",                    icon: ShoppingBag, accent: "#34D399", tag: "E-commerce",  href: "/work#gooutfitter" },
+      { title: "Upcoming Events", desc: "Event staffing platform led end-to-end.",                icon: Calendar,    accent: "#F472B6", tag: "Events",      href: "/work#upcomingevents" },
+      { title: "Cancelo.io",    desc: "Subscription management, simplified.",                     icon: CreditCard,  accent: "#FB7185", tag: "SaaS",        href: "/work#cancelo" },
+      { title: "Assemble",      desc: "Collaborative workspace for remote teams.",                icon: Layers,      accent: "#818CF8", tag: "SaaS",        href: "/work#assemble" },
     ],
   },
   {
@@ -143,10 +146,15 @@ const navLinks: NavLink[] = [
 
 /* ────────────── Navbar ────────────── */
 
+type SessionUser = { name: string | null; email: string; image: string | null };
+
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [authResolved, setAuthResolved] = useState(false);
 
   const navRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -168,6 +176,29 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  // Resolve auth state once on mount + after the account panel closes (catches
+  // login/logout transitions without forcing a page refresh).
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/me", { cache: "no-store" })
+      .then(async (res) => {
+        if (cancelled) return;
+        if (res.status === 401) {
+          setUser(null);
+        } else if (res.ok) {
+          const { user: u } = (await res.json()) as { user: SessionUser };
+          setUser(u);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setAuthResolved(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [accountOpen]);
+
   const openMenu = (label: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setActiveMenu(label);
@@ -181,7 +212,7 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        className="w-full bg-[#0c1c3d] border-b border-white/10 px-6 lg:px-10 flex items-center justify-between relative z-50 h-[64px]"
+        className="w-full bg-[#143A8E] border-b border-white/10 px-6 lg:px-10 flex items-center justify-between relative z-50 h-[64px]"
       >
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
@@ -195,7 +226,7 @@ export default function Navbar() {
             />
           </div>
           <span className="text-white font-bold text-[17px] tracking-tight">
-            Igknight<span className="text-[#4f9ef8]">Tech</span>
+            Igknight<span className="text-[#2783ED]">Tech</span>
           </span>
         </Link>
 
@@ -207,7 +238,7 @@ export default function Navbar() {
                 <li key={link.label} className="relative h-full flex items-center">
                   <Link
                     href={link.simpleHref}
-                    className="text-sm font-medium px-3.5 h-full inline-flex items-center text-[#94afd4] hover:text-white transition-colors duration-200"
+                    className="text-sm font-medium px-3.5 h-full inline-flex items-center text-[#a8bee0] hover:text-white transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -225,7 +256,7 @@ export default function Navbar() {
                   className={`flex items-center gap-1 text-sm font-medium px-3.5 h-full transition-all duration-200 ${
                     activeMenu === link.label
                       ? "text-white"
-                      : "text-[#94afd4] hover:text-white"
+                      : "text-[#a8bee0] hover:text-white"
                   }`}
                   aria-expanded={activeMenu === link.label}
                 >
@@ -233,7 +264,7 @@ export default function Navbar() {
                   <ChevronDown
                     className={`w-3.5 h-3.5 transition-all duration-300 ${
                       activeMenu === link.label
-                        ? "rotate-180 text-[#4f9ef8]"
+                        ? "rotate-180 text-[#2783ED]"
                         : "opacity-60"
                     }`}
                   />
@@ -261,12 +292,14 @@ export default function Navbar() {
 
         {/* ── Desktop CTAs ── */}
         <div className="hidden lg:flex items-center gap-2.5">
-          <button className="text-[#94afd4] hover:text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors duration-200">
-            Login
-          </button>
+          <AuthSlot
+            user={user}
+            authResolved={authResolved}
+            onOpen={() => setAccountOpen(true)}
+          />
           <Link
             href="/schedule"
-            className="bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all duration-200 shadow-[0_0_20px_rgba(79,158,248,0.3)] hover:shadow-[0_0_28px_rgba(79,158,248,0.5)]"
+            className="bg-[#2783ED] hover:bg-[#1A6FD9] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all duration-200 shadow-[0_0_20px_rgba(39,131,237,0.3)] hover:shadow-[0_0_28px_rgba(39,131,237,0.5)]"
           >
             Schedule a Meeting
             <ArrowRight className="w-4 h-4" />
@@ -295,7 +328,7 @@ export default function Navbar() {
         />
 
         <div
-          className={`absolute top-[64px] left-0 right-0 bottom-0 bg-[#0c1c3d] overflow-y-auto transition-transform duration-300 ${
+          className={`absolute top-[64px] left-0 right-0 bottom-0 bg-[#143A8E] overflow-y-auto transition-transform duration-300 ${
             mobileOpen ? "translate-y-0" : "-translate-y-4"
           }`}
         >
@@ -307,7 +340,7 @@ export default function Navbar() {
                     key={link.label}
                     href={link.simpleHref}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-3.5 text-[#c8d8f0] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
+                    className="block px-4 py-3.5 text-[#d6e3f9] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
                   >
                     {link.label}
                   </Link>
@@ -316,7 +349,7 @@ export default function Navbar() {
               return (
               <div key={link.label} className="rounded-xl overflow-hidden">
                 <button
-                  className="w-full flex items-center justify-between px-4 py-3.5 text-[#c8d8f0] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
+                  className="w-full flex items-center justify-between px-4 py-3.5 text-[#d6e3f9] hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium text-sm"
                   onClick={() =>
                     setMobileExpanded(mobileExpanded === link.label ? null : link.label)
                   }
@@ -325,7 +358,7 @@ export default function Navbar() {
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-300 ${
                       mobileExpanded === link.label
-                        ? "rotate-180 text-[#4f9ef8]"
+                        ? "rotate-180 text-[#2783ED]"
                         : "opacity-50"
                     }`}
                   />
@@ -338,7 +371,7 @@ export default function Navbar() {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="bg-[#112040] rounded-xl mx-1 mb-1 p-2 grid grid-cols-2 gap-1">
+                  <div className="bg-[#1D3275] rounded-xl mx-1 mb-1 p-2 grid grid-cols-2 gap-1">
                     {(link.items ?? []).map((item) => {
                       const Icon = item.icon;
                       return (
@@ -364,12 +397,12 @@ export default function Navbar() {
                                 {item.title}
                               </div>
                               {item.badge && (
-                                <span className="text-[8px] font-bold uppercase tracking-wider bg-[#4f9ef8]/20 text-[#7BB6FF] px-1 py-0.5 rounded-full">
+                                <span className="text-[8px] font-bold uppercase tracking-wider bg-[#2783ED]/20 text-[#7BB6FF] px-1 py-0.5 rounded-full">
                                   {item.badge}
                                 </span>
                               )}
                             </div>
-                            <div className="text-[#6a87b4] text-[11px] mt-0.5 leading-snug line-clamp-2">
+                            <div className="text-[#88a0c6] text-[11px] mt-0.5 leading-snug line-clamp-2">
                               {item.desc}
                             </div>
                           </div>
@@ -384,13 +417,28 @@ export default function Navbar() {
 
             {/* Mobile CTAs */}
             <div className="mt-4 flex flex-col gap-3 px-1 pb-8">
-              <button className="w-full py-3 rounded-xl border border-white/10 text-[#94afd4] text-sm font-medium hover:bg-white/5 transition-colors">
-                Login
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  setAccountOpen(true);
+                }}
+                className="w-full py-3 rounded-xl border border-white/10 text-[#d6e3f9] text-sm font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+              >
+                {user ? (
+                  <>
+                    <MobileAvatarMini name={user.name} image={user.image} />
+                    <span className="truncate max-w-[180px]">
+                      {user.name || user.email}
+                    </span>
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </button>
               <Link
                 href="/schedule"
                 onClick={() => setMobileOpen(false)}
-                className="w-full py-3 rounded-xl bg-[#4f9ef8] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(79,158,248,0.3)]"
+                className="w-full py-3 rounded-xl bg-[#2783ED] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(39,131,237,0.3)]"
               >
                 Schedule a Meeting
                 <ArrowRight className="w-4 h-4" />
@@ -399,8 +447,128 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      <AccountPanel open={accountOpen} onClose={() => setAccountOpen(false)} />
     </>
   );
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Auth slot (desktop)                                         */
+/* ─────────────────────────────────────────────────────────── */
+function AuthSlot({
+  user,
+  authResolved,
+  onOpen,
+}: {
+  user: SessionUser | null;
+  authResolved: boolean;
+  onOpen: () => void;
+}) {
+  // Reserve a stable button-sized slot so the layout doesn't shift while auth
+  // resolves. The button just swaps its content the moment we know.
+  if (!authResolved) {
+    return (
+      <div className="h-9 w-[88px] rounded-lg bg-white/[0.04] animate-pulse" />
+    );
+  }
+  if (!user) {
+    return (
+      <button
+        onClick={onOpen}
+        className="text-[#a8bee0] hover:text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors duration-200"
+      >
+        Sign in
+      </button>
+    );
+  }
+  return (
+    <button
+      onClick={onOpen}
+      aria-label="Open account"
+      className="group flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border border-white/10 hover:border-white/25 hover:bg-white/[0.04] transition-colors"
+    >
+      <NavAvatar name={user.name} image={user.image} />
+      <span className="text-white/90 group-hover:text-white text-[12.5px] font-medium tracking-tight truncate max-w-[120px]">
+        {firstName(user.name) || user.email}
+      </span>
+    </button>
+  );
+}
+
+function NavAvatar({
+  name,
+  image,
+}: {
+  name: string | null;
+  image: string | null;
+}) {
+  const [errored, setErrored] = useState(false);
+  if (image && !errored) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={image}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setErrored(true)}
+        className="w-7 h-7 rounded-full object-cover border border-white/20"
+      />
+    );
+  }
+  return (
+    <div
+      className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white"
+      style={{
+        background: "linear-gradient(135deg, #2783ED 0%, #8B5CF6 100%)",
+      }}
+    >
+      {initialsFor(name)}
+    </div>
+  );
+}
+
+function MobileAvatarMini({
+  name,
+  image,
+}: {
+  name: string | null;
+  image: string | null;
+}) {
+  const [errored, setErrored] = useState(false);
+  if (image && !errored) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={image}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setErrored(true)}
+        className="w-6 h-6 rounded-full object-cover border border-white/20"
+      />
+    );
+  }
+  return (
+    <div
+      className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
+      style={{
+        background: "linear-gradient(135deg, #2783ED 0%, #8B5CF6 100%)",
+      }}
+    >
+      {initialsFor(name)}
+    </div>
+  );
+}
+
+function firstName(name: string | null): string {
+  return (name ?? "").trim().split(/\s+/)[0] ?? "";
+}
+
+function initialsFor(name: string | null): string {
+  const n = (name ?? "").trim();
+  if (!n) return "•";
+  const parts = n.split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "•";
 }
 
 /* ─────────────────────────────────────────────────────────── */
@@ -408,7 +576,7 @@ export default function Navbar() {
 /* ─────────────────────────────────────────────────────────── */
 function MegaDropdown({ link }: { link: NavLink }) {
   return (
-    <div className="w-[680px] xl:w-[760px] max-w-[calc(100vw-2rem)] bg-[#0F1F45] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.6)] overflow-hidden backdrop-blur-xl">
+    <div className="w-[680px] xl:w-[760px] max-w-[calc(100vw-2rem)] bg-[#1B49A8] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.6)] overflow-hidden backdrop-blur-xl">
 
       {/* Header bar */}
       <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between bg-gradient-to-b from-white/[0.04] to-transparent">
@@ -416,14 +584,14 @@ function MegaDropdown({ link }: { link: NavLink }) {
           <div className="text-white text-[13px] font-semibold tracking-tight">
             {link.headerTitle}
           </div>
-          <div className="text-[#6a87b4] text-[11px] mt-0.5 truncate">
+          <div className="text-[#88a0c6] text-[11px] mt-0.5 truncate">
             {link.headerSubtitle}
           </div>
         </div>
         {link.viewAllHref ? (
           <Link
             href={link.viewAllHref}
-            className="group flex-shrink-0 flex items-center gap-1 text-[#4f9ef8] text-[10px] font-bold uppercase tracking-[0.18em] hover:gap-1.5 transition-all"
+            className="group flex-shrink-0 flex items-center gap-1 text-[#2783ED] text-[10px] font-bold uppercase tracking-[0.18em] hover:gap-1.5 transition-all"
           >
             View all
             <ArrowUpRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -491,7 +659,7 @@ function MegaDropdown({ link }: { link: NavLink }) {
                     </span>
                   )}
                 </div>
-                <div className="text-[#6a87b4] text-[11px] mt-1.5 leading-snug">
+                <div className="text-[#88a0c6] text-[11px] mt-1.5 leading-snug">
                   {item.desc}
                 </div>
               </div>
@@ -517,14 +685,14 @@ function MegaDropdown({ link }: { link: NavLink }) {
       {/* Footer CTA */}
       <div className="border-t border-white/[0.06] px-5 py-3.5 flex items-center justify-between gap-3 bg-gradient-to-t from-white/[0.04] to-transparent">
         <div className="flex items-center gap-2 min-w-0">
-          <Sparkles className="w-3.5 h-3.5 text-[#4f9ef8] flex-shrink-0" />
-          <span className="text-[#c8d8f0] text-xs truncate">
+          <Sparkles className="w-3.5 h-3.5 text-[#2783ED] flex-shrink-0" />
+          <span className="text-[#d6e3f9] text-xs truncate">
             {link.footerText}
           </span>
         </div>
         <Link
           href={link.footerCtaHref ?? "/schedule"}
-          className="group flex-shrink-0 flex items-center gap-1.5 text-white text-xs font-semibold bg-[#4f9ef8] hover:bg-[#3a8ef0] px-3.5 py-1.5 rounded-lg transition-all duration-200 shadow-[0_0_16px_rgba(79,158,248,0.3)] hover:shadow-[0_0_24px_rgba(79,158,248,0.5)]"
+          className="group flex-shrink-0 flex items-center gap-1.5 text-white text-xs font-semibold bg-[#2783ED] hover:bg-[#1A6FD9] px-3.5 py-1.5 rounded-lg transition-all duration-200 shadow-[0_0_16px_rgba(39,131,237,0.3)] hover:shadow-[0_0_24px_rgba(39,131,237,0.5)]"
         >
           {link.footerCtaText}
           <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" />

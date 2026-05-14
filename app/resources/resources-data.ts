@@ -427,7 +427,7 @@ export const ARTICLES: Article[] = [
     body: [
       {
         paragraphs: [
-          "Most design systems work fine inside Figma and unravel the moment they cross into code. The same shade of blue appears as `#4F9EF8` in one component and `rgb(80, 158, 248)` in another. A spacing scale defined as 4-8-12-16 in the design file shows up in CSS as `0.25rem`, `0.5rem`, `0.75rem`, `1rem`, but also as `4px`, `8px`, and a stray `0.4em` someone wrote in a hurry.",
+          "Most design systems work fine inside Figma and unravel the moment they cross into code. The same shade of blue appears as `#2783ED` in one component and `rgb(80, 158, 248)` in another. A spacing scale defined as 4-8-12-16 in the design file shows up in CSS as `0.25rem`, `0.5rem`, `0.75rem`, `1rem`, but also as `4px`, `8px`, and a stray `0.4em` someone wrote in a hurry.",
           "Design tokens solve this — but only when they're treated as a versioned contract between design and engineering, not as a documentation artifact. The teams that get the most out of tokens treat them with the same discipline as an API.",
         ],
       },
@@ -441,7 +441,7 @@ export const ARTICLES: Article[] = [
       {
         heading: "The structure we settled on",
         paragraphs: [
-          "We group tokens into three tiers. Primitives are the raw values: `color.blue.500 = #4F9EF8`, `space.4 = 16px`. Semantics are the meaningful aliases: `color.brand.primary = color.blue.500`, `space.section = space.16`. Components consume only semantics, never primitives. This three-tier structure means we can rebrand by changing the semantic layer, retune the palette by changing primitives, or both — without rewriting components.",
+          "We group tokens into three tiers. Primitives are the raw values: `color.blue.500 = #2783ED`, `space.4 = 16px`. Semantics are the meaningful aliases: `color.brand.primary = color.blue.500`, `space.section = space.16`. Components consume only semantics, never primitives. This three-tier structure means we can rebrand by changing the semantic layer, retune the palette by changing primitives, or both — without rewriting components.",
           "The tooling is boring on purpose. We export from Figma to a JSON file, run it through Style Dictionary, and emit CSS variables, JS/TS exports, and a Figma library file in one build step. The export runs in CI on every merge. The contract is enforced because the build fails if a token is referenced that doesn't exist.",
         ],
       },

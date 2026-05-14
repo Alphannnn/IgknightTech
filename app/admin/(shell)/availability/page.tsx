@@ -227,7 +227,7 @@ export default async function AvailabilityPage({
                   {isToday && (
                     <span
                       aria-hidden="true"
-                      className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#4f9ef8] bg-[#4f9ef8]/10 px-1.5 py-0.5 rounded-full"
+                      className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#2783ED] bg-[#2783ED]/10 px-1.5 py-0.5 rounded-full"
                     >
                       Today
                     </span>

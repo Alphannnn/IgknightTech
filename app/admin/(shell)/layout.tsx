@@ -1,5 +1,6 @@
 import AdminShell from "../AdminShell";
 import AdminToast from "../AdminToast";
+import RealtimeRefresh from "../RealtimeRefresh";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ export default async function ShellLayout({
     <AdminShell badges={{ pending, drafts, hiddenRoles }}>
       {children}
       <AdminToast />
+      <RealtimeRefresh />
     </AdminShell>
   );
 }

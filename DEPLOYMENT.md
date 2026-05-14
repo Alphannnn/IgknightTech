@@ -54,8 +54,47 @@ DB without dropping data, unless a column is removed.
    | `DATABASE_URL`    | The pooled Postgres connection string from step 1                        |
    | `ADMIN_PASSWORD`  | The password you'll use to log in at `/admin/login`                      |
    | `SESSION_SECRET`  | Any random string ≥ 32 chars (generate with `openssl rand -hex 32`)      |
+   | `CRON_SECRET`     | Any random string (used to authenticate the Neon keep-alive cron)        |
 
 5. Click **Deploy**. The build runs `prisma generate && next build`.
+
+## Keep-alive cron (fights Neon's free-tier compute suspend)
+
+Neon's free tier suspends the Postgres compute after ~5 minutes idle. The first
+request after a suspend pays a 500ms–2s wakeup penalty. To avoid this, this
+project ships with a Vercel cron in [`vercel.json`](./vercel.json) that hits
+`/api/cron/keepalive` every 4 minutes, running a tiny `SELECT 1` to keep the
+compute warm.
+
+How it works:
+- Vercel cron sends `Authorization: Bearer ${CRON_SECRET}` automatically — the
+  route at [`app/api/cron/keepalive/route.ts`](./app/api/cron/keepalive/route.ts)
+  checks that header (or a `?token=` query param for external pingers).
+- If you can't use Vercel cron (some Hobby plans limit cron count or frequency),
+  you can instead set up a free cron at <https://cron-job.org> pointing at
+  `https://your-domain.com/api/cron/keepalive?token=<your CRON_SECRET>` every
+  4 minutes. Same result.
+- Or skip the cron entirely and upgrade Neon to Pro ($19/mo), which disables
+  compute suspend.
+
+## Public sign-in
+
+Visitors must sign in with their name + email before booking a meeting on
+`/schedule`. There is no password — the form claims an identity and sets a
+30-day HMAC-signed cookie. The login endpoint is `POST /api/auth/login`;
+session helpers live in `lib/session.ts` and `lib/user-auth.ts`. This is
+intentionally lightweight (matches the trust model of the public booking
+form). If you ever start storing sensitive per-user data, swap this out for
+a real auth method (OAuth or password + hashing).
+
+## Featured-image uploads
+
+Blog cover images are stored directly in your Postgres DB (`BlogImage` table)
+and served via `/api/blog-image/<id>` with `Cache-Control: public, max-age=
+31536000, immutable`. Vercel's edge cache absorbs all repeat traffic, so each
+image only hits the DB once. **No external storage service required** — works
+the moment your DB is up. Upload limits: JPG/PNG/WebP/AVIF/GIF, max 4 MB
+(comfortably under Vercel's 4.5 MB serverless body limit).
 
 ## 4. After first deploy
 

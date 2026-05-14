@@ -112,7 +112,7 @@ export default function WorkPage() {
 
 function Hero() {
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden pt-20 sm:pt-24 lg:pt-28 pb-20 sm:pb-24">
+    <section className="relative w-full bg-[#143A8E] overflow-hidden pt-20 sm:pt-24 lg:pt-28 pb-20 sm:pb-24">
 
       {/* Dot grid */}
       <div
@@ -162,7 +162,7 @@ function Hero() {
           Work that{" "}
           <span
             style={{
-              backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+              backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -180,7 +180,7 @@ function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href="#case-studies"
-            className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
+            className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.55)]"
           >
             See case studies
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -280,20 +280,34 @@ function FeaturedCase() {
             />
             <CaseCover study={featured} aspect="4/3" rounded="rounded-3xl" />
 
-            {/* Project meta strip — sits under image */}
+            {/* Project meta strip — sits under image. Duration/team only show
+                when we have real data; year + live-site link are always shown. */}
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
-                <span className="font-semibold text-slate-700">{featured.duration}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
-                <span className="font-semibold text-slate-700">{featured.teamSize}</span>
-              </div>
+              {featured.duration && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
+                  <span className="font-semibold text-slate-700">{featured.duration}</span>
+                </div>
+              )}
+              {featured.teamSize && (
+                <div className="flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
+                  <span className="font-semibold text-slate-700">{featured.teamSize}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1.5">
                 <Sparkle className="w-4 h-4 text-slate-400" strokeWidth={1.8} />
                 <span className="font-semibold text-slate-700">Shipped {featured.year}</span>
               </div>
+              <a
+                href={featured.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/site inline-flex items-center gap-1.5 font-semibold text-slate-700 hover:text-[#2783ED] transition-colors"
+              >
+                <span className="truncate max-w-[200px]">{featured.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 group-hover/site:translate-x-0.5 group-hover/site:-translate-y-0.5 transition-transform" />
+              </a>
             </div>
           </div>
 
@@ -353,37 +367,39 @@ function FeaturedCase() {
               ))}
             </div>
 
-            {/* Client quote */}
-            <figure className="mt-8 relative rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
-              <Quote
-                className="absolute top-4 right-4 w-6 h-6 text-slate-200"
-                strokeWidth={1.5}
-              />
-              <blockquote className="text-slate-700 text-[15px] sm:text-base leading-relaxed">
-                &ldquo;{featured.quote.text}&rdquo;
-              </blockquote>
-              <figcaption className="mt-4 flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                  style={{
-                    background: `linear-gradient(135deg, ${featured.quote.avatar.from}, ${featured.quote.avatar.to})`,
-                  }}
-                >
-                  {featured.quote.author
-                    .split(" ")
-                    .map((s) => s[0])
-                    .slice(0, 2)
-                    .join("")}
-                </span>
-                <div>
-                  <div className="text-sm font-bold text-slate-900">{featured.quote.author}</div>
-                  <div className="text-xs text-slate-500">{featured.quote.role}</div>
-                </div>
-              </figcaption>
-            </figure>
+            {/* Client quote (only when one is on record) */}
+            {featured.quote && (
+              <figure className="mt-8 relative rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+                <Quote
+                  className="absolute top-4 right-4 w-6 h-6 text-slate-200"
+                  strokeWidth={1.5}
+                />
+                <blockquote className="text-slate-700 text-[15px] sm:text-base leading-relaxed">
+                  &ldquo;{featured.quote.text}&rdquo;
+                </blockquote>
+                <figcaption className="mt-4 flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                    style={{
+                      background: `linear-gradient(135deg, ${featured.quote.avatar.from}, ${featured.quote.avatar.to})`,
+                    }}
+                  >
+                    {featured.quote.author
+                      .split(" ")
+                      .map((s) => s[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+                  <div>
+                    <div className="text-sm font-bold text-slate-900">{featured.quote.author}</div>
+                    <div className="text-xs text-slate-500">{featured.quote.role}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            )}
 
-            <div className="mt-7">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href={`/work/${featured.id}`}
                 className="group inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors"
@@ -391,6 +407,15 @@ function FeaturedCase() {
                 Read full case study
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
+              <a
+                href={featured.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 font-semibold text-sm px-5 py-3 rounded-xl border border-slate-200 hover:border-slate-300 transition-colors"
+              >
+                Visit live site
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
             </div>
           </div>
         </div>
@@ -451,7 +476,7 @@ function HowWeEngage() {
                 className="group relative rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 hover:border-slate-300 hover:shadow-[0_4px_20px_rgba(15,23,42,0.05)] transition-all duration-300"
               >
                 <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100/70 flex items-center justify-center group-hover:bg-blue-100/80 transition-colors">
-                  <Icon className="w-5 h-5 text-[#4f9ef8]" strokeWidth={1.8} />
+                  <Icon className="w-5 h-5 text-[#2783ED]" strokeWidth={1.8} />
                 </div>
                 <h3 className="mt-5 text-slate-900 text-[17px] sm:text-lg font-extrabold tracking-tight leading-snug">
                   {item.title}
@@ -507,7 +532,7 @@ function CaseGrid() {
   return (
     <section
       id="case-studies"
-      className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24 md:py-28"
+      className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24 md:py-28"
     >
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.3]"
@@ -531,7 +556,7 @@ function CaseGrid() {
               Browse by{" "}
               <span
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                  backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -665,17 +690,31 @@ function CaseCard({ study, delay }: { study: CaseStudy; delay: number }) {
               </span>
             ))}
           </div>
-          <div className="text-right">
-            <div
-              className="text-xl sm:text-2xl font-extrabold tracking-tight"
-              style={{ color: study.color }}
-            >
-              {study.stat.value}
+          {study.stat ? (
+            <div className="text-right">
+              <div
+                className="text-xl sm:text-2xl font-extrabold tracking-tight"
+                style={{ color: study.color }}
+              >
+                {study.stat.value}
+              </div>
+              <div className="text-[10px] text-blue-200/55 uppercase tracking-wide font-semibold">
+                {study.stat.label}
+              </div>
             </div>
-            <div className="text-[10px] text-blue-200/55 uppercase tracking-wide font-semibold">
-              {study.stat.label}
+          ) : (
+            <div className="text-right">
+              <div
+                className="font-mono text-[11px] tracking-wide truncate max-w-[160px]"
+                style={{ color: study.color }}
+              >
+                {study.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+              </div>
+              <div className="text-[10px] text-blue-200/55 uppercase tracking-wide font-semibold">
+                Live site
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </Link>
@@ -684,8 +723,16 @@ function CaseCard({ study, delay }: { study: CaseStudy; delay: number }) {
 
 /* ───────────────────────── Voices (white) ───────────────────────── */
 
+type CaseWithQuote = CaseStudy & { quote: NonNullable<CaseStudy["quote"]> };
+
 function Voices() {
-  const quotes = CASES.slice(0, 3);
+  // Only render this section when we have real client quotes on record.
+  // Hiding entirely beats showing placeholder/dummy testimonials.
+  const quotes: CaseWithQuote[] = CASES.filter(
+    (c): c is CaseWithQuote => c.quote !== undefined,
+  ).slice(0, 3);
+
+  if (quotes.length === 0) return null;
 
   return (
     <section className="relative w-full bg-white overflow-hidden py-20 sm:py-24 md:py-28">
@@ -801,7 +848,7 @@ function ImpactSection() {
                 className="group relative rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 hover:border-slate-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 overflow-hidden"
               >
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100/60 flex items-center justify-center group-hover:bg-blue-100/80 transition-colors">
-                  <Icon className="w-5 h-5 text-[#4f9ef8]" strokeWidth={1.8} />
+                  <Icon className="w-5 h-5 text-[#2783ED]" strokeWidth={1.8} />
                 </div>
                 <div className="mt-5 text-slate-900 text-3xl sm:text-4xl font-extrabold tracking-tight">
                   {s.value}
@@ -825,7 +872,7 @@ function ImpactSection() {
 
 function FinalCTA() {
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24 md:py-28">
+    <section className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24 md:py-28">
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.3]"
         style={{
@@ -841,7 +888,7 @@ function FinalCTA() {
           Have a project worth{" "}
           <span
             style={{
-              backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+              backgroundImage: "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -858,7 +905,7 @@ function FinalCTA() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/schedule"
-            className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
+            className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.55)]"
           >
             Start your project
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -933,7 +980,7 @@ function CaseCover({
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_8px_24px_rgba(15,23,42,0.12)] ${
-            isLight ? "bg-white" : "bg-[#0C1C3D]"
+            isLight ? "bg-white" : "bg-[#143A8E]"
           }`}
         >
           <Icon
@@ -961,7 +1008,7 @@ function CaseCover({
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(180deg, rgba(12,28,61,0) 50%, rgba(12,28,61,0.45) 100%)",
+              "linear-gradient(180deg, rgba(14,31,85,0) 50%, rgba(14,31,85,0.5) 100%)",
           }}
         />
       )}

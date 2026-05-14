@@ -25,7 +25,7 @@ function LoginShell({ next }: { next: string }) {
   const [state, action, pending] = useActionState(loginAction, initialState);
 
   return (
-    <div className="min-h-screen bg-[#0A1635] flex items-center justify-center px-5 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0F2A6F] flex items-center justify-center px-5 relative overflow-hidden">
 
       {/* Background — dot grid + halos */}
       <div
@@ -114,7 +114,7 @@ function LoginShell({ next }: { next: string }) {
             <button
               type="submit"
               disabled={pending}
-              className="group w-full inline-flex items-center justify-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
+              className="group w-full inline-flex items-center justify-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.55)]"
             >
               {pending ? "Signing in…" : "Sign in"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

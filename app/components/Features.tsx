@@ -320,7 +320,7 @@ function ProjectBoardMockup() {
 
       {/* Premium video frame */}
       <div
-        className="absolute inset-0 rounded-2xl border border-slate-200/70 overflow-hidden bg-gradient-to-br from-[#0C1C3D] via-[#0F1F45] to-[#0C1C3D]"
+        className="absolute inset-0 rounded-2xl border border-slate-200/70 overflow-hidden bg-gradient-to-br from-[#143A8E] via-[#1B49A8] to-[#143A8E]"
         style={{
           boxShadow:
             "0 1px 0 rgba(255,255,255,0.7) inset, 0 0 0 1px rgba(15,23,42,0.05), 0 14px 32px -14px rgba(15,23,42,0.22), 0 60px 110px -40px rgba(15,23,42,0.45)",

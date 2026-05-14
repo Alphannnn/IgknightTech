@@ -25,7 +25,7 @@ export default function ServiceDetail() {
     return (
       <>
         <Navbar />
-        <div className="min-h-[60vh] bg-[#0C1C3D] flex items-center justify-center text-center px-5">
+        <div className="min-h-[60vh] bg-[#143A8E] flex items-center justify-center text-center px-5">
           <div>
             <div className="text-blue-200/50 text-sm font-bold uppercase tracking-[0.22em]">
               404 · Not found
@@ -38,7 +38,7 @@ export default function ServiceDetail() {
             </p>
             <Link
               href="/services"
-              className="mt-6 inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors"
+              className="mt-6 inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               See all services
@@ -63,7 +63,7 @@ export default function ServiceDetail() {
       <Navbar />
 
       {/* Top bar */}
-      <div className="bg-[#0C1C3D] border-b border-white/[0.06]">
+      <div className="bg-[#143A8E] border-b border-white/[0.06]">
         <div className="max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:pl-8 lg:pr-20 h-14 flex items-center justify-between">
           <Link
             href="/services"
@@ -79,7 +79,7 @@ export default function ServiceDetail() {
       </div>
 
       {/* ─────── Hero (dark, editorial) ─────── */}
-      <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-16 sm:py-20 lg:py-28">
+      <section className="relative w-full bg-[#143A8E] overflow-hidden py-16 sm:py-20 lg:py-28">
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.32]"
           style={{
@@ -125,7 +125,7 @@ export default function ServiceDetail() {
               <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <Link
                   href="/schedule"
-                  className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
+                  className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.55)]"
                 >
                   Start a project
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -350,7 +350,7 @@ export default function ServiceDetail() {
       </section>
 
       {/* ─────── Process (dark) ─────── */}
-      <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24">
+      <section className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24">
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.3]"
           style={{
@@ -376,7 +376,7 @@ export default function ServiceDetail() {
               <span
                 style={{
                   backgroundImage:
-                    "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                    "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -392,7 +392,7 @@ export default function ServiceDetail() {
             <div className="space-y-5">
               {service.process.map((s) => (
                 <div key={s.num} className="relative pl-14">
-                  <div className="absolute left-0 top-0 w-11 h-11 rounded-full bg-[#0F1F45] border border-white/15 flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.25)]">
+                  <div className="absolute left-0 top-0 w-11 h-11 rounded-full bg-[#1B49A8] border border-white/15 flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.25)]">
                     <span
                       className="text-xs font-black tracking-wider"
                       style={{ color: service.color }}
@@ -469,7 +469,7 @@ export default function ServiceDetail() {
 
       {/* ─────── Related case studies (dark) ─────── */}
       {relatedCases.length > 0 && (
-        <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24">
+        <section className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24">
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.3]"
             style={{

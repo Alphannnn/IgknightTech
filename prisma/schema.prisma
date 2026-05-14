@@ -79,16 +79,28 @@ model BlogPost {
   @@index([date])
 }
 
-/// A signed-in visitor. Identity is asserted via Google OAuth — we never
-/// store a password. `email` from Google is what we use to match meetings
-/// booked through /schedule, so the user's "My meetings" view shows any
-/// meeting whose email matches.
+/// Featured image bytes stored directly in Postgres. Served via
+/// `/api/blog-image/<id>` with immutable cache headers, so each image hits
+/// the DB once and lives on Vercel's edge cache thereafter. The blog post's
+/// `image` column stores that URL as a string — no Prisma relation, so
+/// listing posts never accidentally pulls image bytes.
+model BlogImage {
+  id        String   @id @default(cuid())
+  mime      String   // e.g. "image/jpeg"
+  size      Int      // bytes
+  data      Bytes
+  createdAt DateTime @default(now())
+}
+
+/// A signed-in visitor. Identity is claimed by typing a name and email on
+/// the sign-in form — there is no password. `email` is the primary key and
+/// is also what we use to match meetings booked through /schedule, so the
+/// user's "My meetings" view shows any meeting whose email matches.
 model User {
   id         String   @id @default(cuid())
   email      String   @unique
   name       String?
-  image      String?  // Google profile picture URL
-  googleId   String   @unique
+  image      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

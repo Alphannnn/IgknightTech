@@ -1,7 +1,9 @@
 import { listActiveRoles } from "@/lib/careers";
 import CareersClient from "./CareersClient";
 
-export const dynamic = "force-dynamic";
+// ISR: served from edge cache, regenerated every 60s. Admin edits to roles
+// call revalidatePath("/careers") in lib/careers.ts so changes appear sooner.
+export const revalidate = 60;
 
 export default async function CareersPage() {
   const rolesView = await listActiveRoles();

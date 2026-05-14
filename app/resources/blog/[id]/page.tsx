@@ -9,8 +9,9 @@ import { ArrowLeft } from "lucide-react";
 
 const SITE_URL = "https://igknight.tech";
 
-// Force dynamic rendering — DB-backed content can change between requests.
-export const dynamic = "force-dynamic";
+// ISR: each post is cached at the edge and regenerated on demand every 60s.
+// Admin edits in lib/blog.ts call revalidatePath() so changes appear sooner.
+export const revalidate = 60;
 
 type Params = Promise<{ id: string }>;
 

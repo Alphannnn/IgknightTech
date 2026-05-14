@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { savePostAction, type SavePostState } from "./actions";
+import FeaturedImageUpload from "./FeaturedImageUpload";
 
 export type BodySection = { heading?: string; paragraphs: string[] };
 
@@ -81,7 +82,6 @@ export default function BlogForm({ initial }: { initial: BlogFormInitial }) {
   const [categoryColor, setCategoryColor] = useState(initial.categoryColor);
   const [avatarFrom, setAvatarFrom] = useState(initial.avatarFrom);
   const [avatarTo, setAvatarTo] = useState(initial.avatarTo);
-  const [image, setImage] = useState(initial.image);
 
   const bodyJson = useMemo(
     () =>
@@ -360,17 +360,13 @@ export default function BlogForm({ initial }: { initial: BlogFormInitial }) {
             </Field>
           </SectionCard>
 
-          {/* Card: Featured image */}
-          <SectionCard title="Featured image" subtitle="Optional path — defaults to the generative cover when empty.">
-            <Field label="Path" hint="e.g. /blog/my-post.jpg">
-              <input
-                name="image"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder="/blog/my-post.jpg"
-                className={inputCls()}
-              />
-            </Field>
+          {/* Card: Featured image — uploads to Vercel Blob (or paste a URL).
+              When empty the public page falls back to its generative cover. */}
+          <SectionCard
+            title="Featured image"
+            subtitle="Optional — uploads go to Vercel Blob and serve via the CDN."
+          >
+            <FeaturedImageUpload initial={initial.image} slug={slug || initial.slug} />
           </SectionCard>
 
         </div>

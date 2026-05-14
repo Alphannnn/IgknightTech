@@ -122,7 +122,7 @@ export default function CareersClient({ roles }: { roles: Role[] }) {
 
 function Hero() {
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden pt-24 sm:pt-28 lg:pt-32 pb-20 sm:pb-24 lg:pb-28">
+    <section className="relative w-full bg-[#143A8E] overflow-hidden pt-24 sm:pt-28 lg:pt-32 pb-20 sm:pb-24 lg:pb-28">
 
       {/* Dot grid */}
       <div
@@ -161,7 +161,7 @@ function Hero() {
           <span
             style={{
               backgroundImage:
-                "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -180,7 +180,7 @@ function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href="#open-roles"
-            className="group inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.55)]"
+            className="group inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm sm:text-[15px] px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.55)]"
           >
             See open roles
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -318,7 +318,7 @@ function OpenRoles({ roles }: { roles: Role[] }) {
   return (
     <section
       id="open-roles"
-      className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24 md:py-28"
+      className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24 md:py-28"
     >
       {/* Dot grid */}
       <div
@@ -348,7 +348,7 @@ function OpenRoles({ roles }: { roles: Role[] }) {
               <span
                 style={{
                   backgroundImage:
-                    "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                    "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -494,7 +494,7 @@ function EmptyState() {
       </p>
       <a
         href="mailto:careers@igknight.tech"
-        className="mt-5 inline-flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
+        className="mt-5 inline-flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
       >
         <Mail className="w-4 h-4" />
         Get in touch
@@ -543,7 +543,7 @@ function BenefitsSection() {
                 className="group rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 hover:border-slate-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100/60 flex items-center justify-center group-hover:bg-blue-100/80 transition-colors">
-                  <Icon className="w-5 h-5 text-[#4f9ef8]" strokeWidth={1.8} />
+                  <Icon className="w-5 h-5 text-[#2783ED]" strokeWidth={1.8} />
                 </div>
                 <h3 className="mt-4 text-slate-900 text-base font-bold tracking-tight">
                   {b.title}
@@ -564,7 +564,7 @@ function BenefitsSection() {
 
 function HiringProcess() {
   return (
-    <section className="relative w-full bg-[#0C1C3D] overflow-hidden py-20 sm:py-24 md:py-28">
+    <section className="relative w-full bg-[#143A8E] overflow-hidden py-20 sm:py-24 md:py-28">
       {/* Dot grid */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.3]"
@@ -592,7 +592,7 @@ function HiringProcess() {
             <span
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, #7BB6FF 0%, #BFD9FF 60%, #7BB6FF 100%)",
+                  "linear-gradient(90deg, #7BB6FF 0%, #CDE2FE 60%, #7BB6FF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -616,7 +616,7 @@ function HiringProcess() {
             {HIRING_STEPS.map((step, i) => (
               <div key={step.num} className="relative pl-14 sm:pl-16">
                 {/* Step badge */}
-                <div className="absolute left-0 top-0 w-11 sm:w-[52px] h-11 sm:h-[52px] rounded-full bg-[#0F1F45] border border-white/15 flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.25)]">
+                <div className="absolute left-0 top-0 w-11 sm:w-[52px] h-11 sm:h-[52px] rounded-full bg-[#1B49A8] border border-white/15 flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.25)]">
                   <span className="text-[#7BB6FF] text-xs sm:text-sm font-black tracking-wider">
                     {step.num}
                   </span>

@@ -2,6 +2,8 @@
 
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SignInForm } from "@/app/components/AccountPanel";
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,14 +17,16 @@ import {
   MessageSquare,
   Zap,
   User,
-  Mail,
   Building2,
   Pencil,
   ShieldCheck,
   AlertCircle,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
 import { bookMeeting } from "@/lib/meetings";
+
+type SessionUser = { name: string | null; email: string; image: string | null };
 
 /* ───────────────────────── Static data ───────────────────────── */
 
@@ -118,9 +122,11 @@ type FormState = {
 
 export default function ScheduleClient({
   blockedDays,
+  user,
 }: {
   /** "yyyy-mm-dd" strings the admin has blocked. */
   blockedDays: string[];
+  user: SessionUser | null;
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [meetingTypeId, setMeetingTypeId] = useState<string | null>(null);
@@ -131,10 +137,20 @@ export default function ScheduleClient({
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), 1);
   });
-  const [form, setForm] = useState<FormState>({ name: "", email: "", company: "", role: "" });
+  const [form, setForm] = useState<FormState>({
+    name: user?.name ?? "",
+    email: user?.email ?? "",
+    company: "",
+    role: "",
+  });
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Render a sign-in gate instead of the wizard for signed-out visitors.
+  if (!user) {
+    return <SignInGate />;
+  }
 
   const meetingType = useMemo(
     () => MEETING_TYPES.find((m) => m.id === meetingTypeId),
@@ -146,7 +162,7 @@ export default function ScheduleClient({
   const canProceed =
     (step === 1 && meetingTypeId !== null) ||
     (step === 2 && selectedDate !== null && selectedTime !== null) ||
-    (step === 3 && form.name.trim() !== "" && form.email.trim() !== "");
+    (step === 3 && form.name.trim() !== "");
 
   function pad(n: number) {
     return String(n).padStart(2, "0");
@@ -161,7 +177,6 @@ export default function ScheduleClient({
 
     const res = await bookMeeting({
       name: form.name,
-      email: form.email,
       company: form.company || null,
       message: [
         intent && `Intent: ${intent}`,
@@ -207,7 +222,7 @@ export default function ScheduleClient({
             <span className="hidden sm:inline">Back to home</span>
           </Link>
           <div className="flex items-center gap-2">
-            <CalIcon className="w-4 h-4 text-[#4f9ef8]" />
+            <CalIcon className="w-4 h-4 text-[#2783ED]" />
             <span className="text-slate-900 font-semibold text-sm">Book a meeting</span>
           </div>
         </div>
@@ -247,6 +262,7 @@ export default function ScheduleClient({
             date={selectedDate}
             time={selectedTime}
             intent={intent}
+            user={user}
           />
         )}
       </div>
@@ -283,7 +299,7 @@ export default function ScheduleClient({
               <button
                 disabled={!canProceed || submitting}
                 onClick={handleConfirm}
-                className="group flex items-center gap-2 bg-[#4f9ef8] hover:bg-[#3a8ef0] disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(79,158,248,0.35)] hover:shadow-[0_0_32px_rgba(79,158,248,0.5)]"
+                className="group flex items-center gap-2 bg-[#2783ED] hover:bg-[#1A6FD9] disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all shadow-[0_0_24px_rgba(39,131,237,0.35)] hover:shadow-[0_0_32px_rgba(39,131,237,0.5)]"
               >
                 {submitting ? "Booking…" : "Confirm booking"}
                 <Check className="w-4 h-4" />
@@ -576,7 +592,7 @@ function Step2({
                       : isBooked
                       ? "bg-red-50 text-red-400 cursor-not-allowed"
                       : isToday
-                      ? "ring-1 ring-[#4f9ef8] text-[#4f9ef8] hover:bg-blue-50"
+                      ? "ring-1 ring-[#2783ED] text-[#2783ED] hover:bg-blue-50"
                       : disabled
                       ? "text-slate-300 cursor-not-allowed"
                       : "text-slate-700 hover:bg-slate-100 hover:scale-[1.03]"
@@ -594,7 +610,7 @@ function Step2({
           {/* Legend */}
           <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-[#4f9ef8]" />
+              <span className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-[#2783ED]" />
               <span className="text-slate-500">Today</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -674,6 +690,7 @@ function Step3({
   date,
   time,
   intent,
+  user,
 }: {
   form: FormState;
   setForm: (f: FormState) => void;
@@ -681,6 +698,7 @@ function Step3({
   date: Date | null;
   time: string | null;
   intent: string;
+  user: SessionUser;
 }) {
   return (
     <div className="max-w-[1100px] mx-auto">
@@ -689,7 +707,7 @@ function Step3({
           Almost there
         </h1>
         <p className="text-slate-500 mt-4 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-          Tell us about yourself, then confirm your booking.
+          A couple of optional details, then confirm your booking.
         </p>
       </div>
 
@@ -698,25 +716,33 @@ function Step3({
         {/* Form */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 space-y-5">
 
-          <Field label="Full name" icon={User} required>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Jane Doe"
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/[0.05] transition-all"
-            />
-          </Field>
+          {/* Signed-in summary — name + email locked to Google session */}
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <SignedInAvatar name={user.name} image={user.image} />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                <Lock className="w-3 h-3" /> Signed in
+              </div>
+              <div className="mt-0.5 text-slate-900 text-sm font-semibold truncate">
+                {user.name || user.email}
+              </div>
+              <div className="text-slate-500 text-xs truncate">{user.email}</div>
+            </div>
+          </div>
 
-          <Field label="Email address" icon={Mail} required>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="jane@company.com"
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/[0.05] transition-all"
-            />
-          </Field>
+          {/* Hidden name field — we keep the FormState wired but use it
+             read-only since the booking server action binds to the session. */}
+          {!user.name && (
+            <Field label="Full name" icon={User} required>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Jane Doe"
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/[0.05] transition-all"
+              />
+            </Field>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <Field label="Company" icon={Building2}>
@@ -740,7 +766,7 @@ function Step3({
           </div>
 
           <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50/60 border border-blue-100">
-            <ShieldCheck className="w-5 h-5 text-[#4f9ef8] flex-shrink-0 mt-0.5" strokeWidth={2} />
+            <ShieldCheck className="w-5 h-5 text-[#2783ED] flex-shrink-0 mt-0.5" strokeWidth={2} />
             <div>
               <p className="text-slate-900 text-sm font-semibold">Your details are safe</p>
               <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">
@@ -806,7 +832,7 @@ function Field({
       <label className="flex items-center gap-2 text-slate-700 text-sm font-semibold mb-2">
         <Icon className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
         {label}
-        {required && <span className="text-[#4f9ef8]">*</span>}
+        {required && <span className="text-[#2783ED]">*</span>}
       </label>
       {children}
     </div>
@@ -909,3 +935,118 @@ function SuccessScreen({
     </div>
   );
 }
+
+/* ───────────────────────── Sign-in gate ───────────────────────── */
+
+function SignInGate() {
+  const router = useRouter();
+  return (
+    <div className="min-h-screen bg-[#fafafa] flex flex-col">
+      {/* Top bar */}
+      <div className="bg-white border-b border-slate-200/80">
+        <div className="max-w-[1340px] mx-auto px-5 sm:px-8 md:px-10 lg:px-12 h-16 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Back to home</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <CalIcon className="w-4 h-4 text-[#2783ED]" />
+            <span className="text-slate-900 font-semibold text-sm">Book a meeting</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Card */}
+      <div className="flex-1 flex items-center justify-center px-5 py-16">
+        <div className="relative w-full max-w-md">
+          {/* Atmospheric glow behind the card */}
+          <div
+            aria-hidden="true"
+            className="absolute -inset-8 rounded-[40px] opacity-50 blur-3xl pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 30% 0%, #7BB6FF 0%, transparent 55%), radial-gradient(circle at 80% 100%, #8B5CF6 0%, transparent 60%)",
+            }}
+          />
+
+          <div className="relative rounded-3xl border border-slate-200 bg-white shadow-[0_30px_80px_-30px_rgba(15,23,42,0.25)] p-9">
+            {/* Logo halo */}
+            <div className="relative w-16 h-16 mx-auto mb-6">
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full blur-2xl opacity-70"
+                style={{
+                  background:
+                    "radial-gradient(circle, #2783ED 0%, #8B5CF6 50%, transparent 75%)",
+                }}
+              />
+              <div className="relative w-16 h-16 rounded-full bg-white border border-slate-200 flex items-center justify-center">
+                <CalIcon className="w-7 h-7 text-[#2783ED]" strokeWidth={1.6} />
+              </div>
+            </div>
+
+            <h1 className="text-slate-900 text-2xl font-extrabold tracking-tight text-center">
+              Sign in to book a meeting
+            </h1>
+            <p className="mt-3 text-slate-500 text-sm leading-relaxed text-center">
+              Just your name and email — no password required. We&apos;ll use them
+              to confirm the booking and let you track its status.
+            </p>
+
+            <SignInForm
+              className="mt-6"
+              onSignedIn={() => router.refresh()}
+            />
+
+            <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>We never share your email with anyone.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignedInAvatar({
+  name,
+  image,
+}: {
+  name: string | null;
+  image: string | null;
+}) {
+  const [errored, setErrored] = useState(false);
+  const initials = (() => {
+    const n = (name ?? "").trim();
+    if (!n) return "•";
+    const parts = n.split(/\s+/);
+    return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "•";
+  })();
+  if (image && !errored) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={image}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setErrored(true)}
+        className="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0"
+      />
+    );
+  }
+  return (
+    <div
+      className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+      style={{
+        background: "linear-gradient(135deg, #2783ED 0%, #8B5CF6 100%)",
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
+
