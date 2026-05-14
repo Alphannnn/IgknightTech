@@ -61,21 +61,26 @@ DB without dropping data, unless a column is removed.
 ## Keep-alive cron (fights Neon's free-tier compute suspend)
 
 Neon's free tier suspends the Postgres compute after ~5 minutes idle. The first
-request after a suspend pays a 500ms–2s wakeup penalty. To avoid this, this
-project ships with a Vercel cron in [`vercel.json`](./vercel.json) that hits
-`/api/cron/keepalive` every 4 minutes, running a tiny `SELECT 1` to keep the
-compute warm.
+request after a suspend pays a 500ms–2s wakeup penalty. To avoid this, ping
+`/api/cron/keepalive` every 4 minutes. The route runs a tiny `SELECT 1` to
+keep the compute warm.
 
-How it works:
-- Vercel cron sends `Authorization: Bearer ${CRON_SECRET}` automatically — the
-  route at [`app/api/cron/keepalive/route.ts`](./app/api/cron/keepalive/route.ts)
-  checks that header (or a `?token=` query param for external pingers).
-- If you can't use Vercel cron (some Hobby plans limit cron count or frequency),
-  you can instead set up a free cron at <https://cron-job.org> pointing at
-  `https://your-domain.com/api/cron/keepalive?token=<your CRON_SECRET>` every
-  4 minutes. Same result.
-- Or skip the cron entirely and upgrade Neon to Pro ($19/mo), which disables
-  compute suspend.
+**On Vercel Hobby, the built-in cron is limited to once-per-day**, so we use
+an external free service instead:
+
+1. Sign up at <https://cron-job.org> (free, no credit card).
+2. Create a new cron job with:
+   - **URL**: `https://your-domain.com/api/cron/keepalive?token=<your CRON_SECRET>`
+   - **Schedule**: every 4 minutes
+   - **Request method**: GET
+3. Save. It starts pinging automatically.
+
+The `?token=` query param must match the `CRON_SECRET` env var you set on
+Vercel — that's what authenticates the request. Without it the route returns
+401 (so it can't be abused by anyone who finds the URL).
+
+Alternative: upgrade Neon to Pro ($19/mo) — disables compute suspend entirely,
+no cron needed. Or upgrade Vercel to Pro to use the built-in cron every minute.
 
 ## Public sign-in
 
